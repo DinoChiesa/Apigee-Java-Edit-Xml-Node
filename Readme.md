@@ -80,13 +80,17 @@ The policy is configured via properties set in the XML.  You can set these prope
 
 | property name     | status | description     | 
 | ----------------- |--------|----------------| 
-| xpath             | Required | the xpath to resolve to a single node in the source document |
+| xpath             | Required | the xpath to resolve to a single node in the source document. |
 | source            | Optional | the source xml document. This should be the name of a context variable. If you omit this property, the policy will use "message.content" as the source. |
 | new-node-type     | Required | should be one of element, attribute, text. |
 | new-node-text     | Required | Depending on the value of new-node-type, this must take a value that corresponds to an element, attribute, or text node.  For an element, eg, `<foo>bar</foo>`.  For an attribute, do not use any quotes.  Eg, `attr1=value`  Or, for a Text node, any text string. |
 | action            | Required | append, insert-before, or replace |
 | output-variable   | Optional | the name of a variable to hold the result. If not present, the result is placed into "message.content". |
 
+
+ The type of the node to which the `xpath` resolves must match the `new-node-type` you specify in the configuration.  In other words, you can replace a text node with a text node (or append, or insert-before). Or, you can replace an element with an element (or append, or insert-before). You cannot use this policy to replace, for example, an element with a text node. Or to append a text node to an attribute. 
+
+NB: There is no support for namespace-qualified attributes. 
 
 
 ## Example Policy Configurations
