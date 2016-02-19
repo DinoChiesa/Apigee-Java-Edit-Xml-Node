@@ -1,0 +1,14 @@
+{
+  "input" : {
+    "debug" : "true",
+    "new-node-text" : "attr2=some-value",
+    "new-node-type" : "attribute",
+    "xpath" : "/root/A/@attr1",
+    "action" : "insert-before",
+    "message-content" : "<root><A attr1='fred'>text1</A></root>"
+  },
+  "expected" : {
+    "success" : "true",
+    "message-content" : "<root><A attr1='fred' attr2='some-value'>text1</A></root>"
+  }
+}

@@ -1,0 +1,81 @@
+<ProxyEndpoint name='default'>
+  <Description>Proxy for Java callout add-xml-node</Description>
+  <HTTPProxyConnection>
+    <BasePath>/add-xml-node</BasePath>
+    <Properties/>
+    <VirtualHost>default</VirtualHost>
+    <VirtualHost>secure</VirtualHost>
+  </HTTPProxyConnection>
+
+  <FaultRules/>
+
+  <PreFlow name="PreFlow">
+      <Request/>
+      <Response>
+      </Response>
+  </PreFlow>
+
+  <PostFlow name="PostFlow">
+      <Request/>
+      <Response>
+      </Response>
+  </PostFlow>
+
+  <Flows>
+    <Flow name='append-text'>
+      <Description>append text to the first child of the first element of an XML document</Description>
+      <Request>
+        <Step>
+          <Name>RF-BadHeader</Name>
+          <Condition>request.header.content-type != "text/xml" AND request.header.content-type != "application/xml"</Condition>
+        </Step>
+        <Step>
+          <Name>RF-MissingQueryParam</Name>
+          <Condition>request.queryparam.texttoadd = null OR request.queryparam.xpath = null</Condition>
+        </Step>
+      </Request>
+      <Response>
+        <Step><Name>Java-AddXmlNode-1</Name></Step>
+        <Step><Name>AM-GoodResponse</Name></Step>
+      </Response>
+      <Condition>(proxy.pathsuffix ~ "/t1") and (request.verb = "POST")</Condition>
+    </Flow>
+
+    <Flow name='replace-text'>
+      <Description>replace the text of an element</Description>
+      <Request>
+        <Step>
+          <Name>RF-BadHeader</Name>
+          <Condition>request.header.content-type != "text/xml" AND request.header.content-type != "application/xml"</Condition>
+        </Step>
+        <Step>
+          <Name>RF-MissingQueryParam</Name>
+          <Condition>request.queryparam.texttoinsert= null</Condition>
+        </Step>
+      </Request>
+      <Response>
+        <Step><Name>Java-AddXmlNode-2</Name></Step>
+        <Step><Name>AM-GoodResponse</Name></Step>
+      </Response>
+      <Condition>(proxy.pathsuffix ~ "/t2") and (request.verb = "POST")</Condition>
+    </Flow>
+
+    <Flow name='unknown'>
+      <!--
+           applies as a "default" flow, in case none of the conditions
+           for the above flows evaluated to true.
+      -->
+      <Description>Unknown request</Description>
+      <Request>
+        <Step><Name>RF-UnknownRequest</Name></Step>
+      </Request>
+      <Response/>
+    </Flow>
+
+  </Flows>
+
+  <RouteRule name='LoopbackRoute'>
+    <!-- no target! no backend call -->
+  </RouteRule>
+
+</ProxyEndpoint>

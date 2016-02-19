@@ -1,0 +1,13 @@
+{
+  "input" : {
+    "new-node-text" : "something",
+    "new-node-type" : "attribute",
+    "xpath" : "/root/@A",
+    "action" : "append",
+    "message-content" : "<root><A attr1='fred'>text1</A></root>"
+  },
+  "expected" : {
+    "success" : "false",
+    "message-content" : "does not matter"
+  }
+}

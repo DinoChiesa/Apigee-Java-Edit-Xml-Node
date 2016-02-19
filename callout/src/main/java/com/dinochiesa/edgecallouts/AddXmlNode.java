@@ -1,0 +1,321 @@
+// AddXmlNode.java
+//
+// This is the source code for a Java callout for Apigee Edge.
+// This callout adds a node into a XML document.
+//
+// ------------------------------------------------------------------
+
+package com.dinochiesa.edgecallouts;
+
+
+import com.apigee.flow.execution.ExecutionContext;
+import com.apigee.flow.execution.ExecutionResult;
+import com.apigee.flow.execution.spi.Execution;
+import com.apigee.flow.message.MessageContext;
+import com.apigee.flow.message.Message;
+import com.dinochiesa.util.XmlUtils;
+import com.dinochiesa.util.XPathEvaluator;
+import com.dinochiesa.util.TemplateString;
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Map;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMResult;
+import javax.xml.transform.sax.SAXSource;
+import javax.xml.xpath.XPathExpressionException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Attr;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
+import org.apache.commons.lang.exception.ExceptionUtils;
+import java.util.HashMap;
+import org.apache.commons.lang.text.StrSubstitutor;
+import javax.xml.xpath.XPathConstants;
+
+
+public class AddXmlNode implements Execution {
+    private static final String _varPrefix = "xml_";
+
+    private enum AddAction {
+        InsertBefore, Append, Replace
+    }
+
+    private Map properties; // read-only
+
+    public AddXmlNode (Map properties) {
+        this.properties = properties;
+    }
+
+    private static final String varName(String s) { return _varPrefix + s; }
+
+    private Document getDocument(MessageContext msgCtxt) throws Exception {
+        String source = getSimpleOptionalProperty("source", msgCtxt);
+        if (source == null) {
+            return XmlUtils.parseXml(msgCtxt.getMessage().getContentAsStream());
+        }
+        String text = (String) msgCtxt.getVariable(source);
+        return XmlUtils.parseXml(text);
+    }
+
+    private String getOutputVar(MessageContext msgCtxt) throws Exception {
+        String dest = getSimpleOptionalProperty("output-variable", msgCtxt);
+        if (dest == null) {
+            return "message.content";
+        }
+        return dest;
+    }
+
+    private String getXpath(MessageContext msgCtxt) throws Exception {
+        return getSimpleRequiredProperty("xpath", msgCtxt);
+    }
+    private boolean getDebug() {
+        String value = (String) this.properties.get("debug");
+        if (value == null) return false;
+        if (value.trim().toLowerCase().equals("true")) return true;
+        return false;
+    }
+
+    private boolean getPretty(MessageContext msgCtxt) throws Exception {
+        String pretty = getSimpleOptionalProperty("pretty", msgCtxt);
+        if (pretty == null) return false;
+        pretty = pretty.toLowerCase();
+        return pretty.equals("true");
+    }
+
+    private String getNewNodeText(MessageContext msgCtxt) throws Exception {
+        String n = getSimpleRequiredProperty("new-node-text", msgCtxt);
+        return n;
+    }
+
+    private short getNewNodeType(MessageContext msgCtxt) throws Exception {
+        String nodetype = getSimpleRequiredProperty("new-node-type", msgCtxt);
+        nodetype = nodetype.toLowerCase();
+        if (nodetype.equals("element")) return Node.ELEMENT_NODE;
+        if (nodetype.equals("attribute")) return Node.ATTRIBUTE_NODE;
+        if (nodetype.equals("text")) return Node.TEXT_NODE;
+        throw new IllegalStateException("new-node-type value is unknown: (" + nodetype + ")");
+    }
+
+    private AddAction getAction(MessageContext msgCtxt) throws Exception {
+        String action = getSimpleRequiredProperty("action", msgCtxt);
+        action = action.toLowerCase();
+        if (action.equals("insert-before")) return AddAction.InsertBefore;
+        if (action.equals("append")) return AddAction.Append;
+        if (action.equals("replace")) return AddAction.Replace;
+        throw new IllegalStateException("action value is unknown: (" + action + ")");
+    }
+
+    private String getSimpleRequiredProperty(String propName, MessageContext msgCtxt) throws Exception {
+        String value = (String) this.properties.get(propName);
+        if (value == null) {
+            throw new IllegalStateException(propName + " resolves to an empty string.");
+        }
+        value = value.trim();
+        if (value.equals("")) {
+            throw new IllegalStateException(propName + " resolves to an empty string.");
+        }
+        value = resolvePropertyValue(value, msgCtxt);
+        if (value == null || value.equals("")) {
+            throw new IllegalStateException(propName + " resolves to an empty string.");
+        }
+        return value;
+    }
+
+    private String getSimpleOptionalProperty(String propName, MessageContext msgCtxt) throws Exception {
+        String value = (String) this.properties.get(propName);
+        if (value == null) { return null; }
+        value = value.trim();
+        if (value.equals("")) { return null; }
+        value = resolvePropertyValue(value, msgCtxt);
+        if (value == null || value.equals("")) { return null; }
+        return value;
+    }
+
+    private XPathEvaluator getXpe(MessageContext msgCtxt) throws Exception {
+        XPathEvaluator xpe = new XPathEvaluator();
+        // register namespaces
+        for (Object key : properties.keySet()) {
+            String k = (String) key;
+            if (k.startsWith("xmlns:")) {
+                String value = resolvePropertyValue((String) properties.get(k), msgCtxt);
+                String[] parts = k.split(":");
+                xpe.registerNamespace(parts[1], value);
+            }
+        }
+        return xpe;
+    }
+
+    // If the value of a property value begins and ends with curlies,
+    // eg, {apiproxy.name}, then "resolve" the value by de-referencing
+    // the context variable whose name appears between the curlies.
+    private String resolvePropertyValue(String spec, MessageContext msgCtxt) {
+        if (spec.indexOf('{') > -1 && spec.indexOf('}')>-1) {
+            // Replace ALL curly-braced items in the spec string with
+            // the value of the corresponding context variable.
+            TemplateString ts = new TemplateString(spec);
+            Map<String,String> valuesMap = new HashMap<String,String>();
+            for (String s : ts.variableNames) {
+                valuesMap.put(s, (String) msgCtxt.getVariable(s));
+            }
+            StrSubstitutor sub = new StrSubstitutor(valuesMap);
+            String resolvedString = sub.replace(ts.template);
+            return resolvedString;
+        }
+        return spec;
+    }
+
+
+    private void execute0 (Document document, MessageContext msgCtxt)
+        throws Exception
+    {
+        String xpath = getXpath(msgCtxt);
+        XPathEvaluator xpe = getXpe(msgCtxt);
+        NodeList nodes = (NodeList)xpe.evaluate(xpath, document, XPathConstants.NODESET);
+        validate(nodes);
+        AddAction action = getAction(msgCtxt);
+        short newNodeType = getNewNodeType(msgCtxt);
+        String text = getNewNodeText(msgCtxt);
+        Node newNode = null;
+        switch (newNodeType) {
+            case Node.ELEMENT_NODE:
+                // Create a duplicate node and transfer ownership of the
+                // new node into the destination document.
+                Document temp = XmlUtils.parseXml(text);
+                newNode = document.importNode(temp.getDocumentElement(), true);
+                break;
+            case Node.ATTRIBUTE_NODE:
+                if (text.indexOf("=") < 1) {
+                    throw new IllegalStateException("attribute spec must be name=value");
+                }
+                String[] parts = text.split("=",2);
+                if (parts.length != 2)
+                    throw new IllegalStateException("attribute spec must be name=value");
+                Attr attr = document.createAttribute(parts[0]);
+                attr.setValue(parts[1]);
+                newNode = attr;
+                break;
+            case Node.TEXT_NODE:
+                newNode = document.createTextNode(text);
+                break;
+        }
+
+        switch (action) {
+            case InsertBefore:
+                insertBefore(nodes,newNode,newNodeType);
+                break;
+            case Append:
+                append(nodes,newNode,newNodeType);
+                break;
+            case Replace:
+                replace(nodes,newNode,newNodeType);
+                break;
+        }
+    }
+
+
+    private void validate(NodeList nodes) throws IllegalStateException {
+        int length = nodes.getLength();
+        if (length != 1) {
+            throw new IllegalStateException("xpath does not resolve to one node. (length=" + length + ")");
+        }
+    }
+
+    private void insertBefore(NodeList nodes, Node newNode, short newNodeType) {
+        Node currentNode = nodes.item(0);
+        switch (newNodeType) {
+            case Node.ATTRIBUTE_NODE:
+                Element parent = ((Attr)currentNode).getOwnerElement();
+                parent.setAttributeNode((Attr)newNode);
+                break;
+            case Node.ELEMENT_NODE:
+                currentNode.getParentNode().insertBefore(newNode, currentNode);
+                break;
+            case Node.TEXT_NODE:
+                String v = currentNode.getNodeValue();
+                currentNode.setNodeValue(newNode.getNodeValue()+v);
+                break;
+        }
+    }
+
+    private void append(NodeList nodes, Node newNode, short newNodeType) {
+        Node currentNode = nodes.item(0);
+        switch (newNodeType) {
+            case Node.ATTRIBUTE_NODE:
+                Element parent = ((Attr)currentNode).getOwnerElement();
+                parent.setAttributeNode((Attr)newNode);
+                break;
+            case Node.ELEMENT_NODE:
+                currentNode.appendChild(newNode);
+                break;
+            case Node.TEXT_NODE:
+                if (currentNode.getNodeType() != Node.TEXT_NODE) {
+                    throw new IllegalStateException("wrong source node type.");
+                }
+                String v = currentNode.getNodeValue();
+                currentNode.setNodeValue(v+newNode.getNodeValue());
+                break;
+        }
+    }
+
+    private void replace(NodeList nodes, Node newNode, short newNodeType) {
+        Node currentNode = nodes.item(0);
+        switch (newNodeType) {
+            case Node.ATTRIBUTE_NODE:
+                Element parent = ((Attr)currentNode).getOwnerElement();
+                parent.removeAttributeNode((Attr)currentNode);
+                parent.setAttributeNode((Attr)newNode);
+                break;
+            case Node.ELEMENT_NODE:
+                currentNode.getParentNode().replaceChild(newNode, currentNode);
+                break;
+            case Node.TEXT_NODE:
+                currentNode.setNodeValue(newNode.getNodeValue());
+                break;
+        }
+    }
+
+
+    public ExecutionResult execute (final MessageContext msgCtxt,
+                                    final ExecutionContext execContext) {
+        try {
+            //Message msg = msgCtxt.getMessage();
+            Document document = getDocument(msgCtxt);
+            execute0(document, msgCtxt);
+            String result = XmlUtils.toString(document,getPretty(msgCtxt));
+            String outputVar = getOutputVar(msgCtxt);
+            msgCtxt.setVariable(outputVar, result);
+        }
+        catch (Exception e) {
+            if (getDebug()) {
+                System.out.println(ExceptionUtils.getStackTrace(e));
+            }
+            String error = e.toString();
+            msgCtxt.setVariable(varName("exception"), error);
+            int ch = error.lastIndexOf(':');
+            if (ch >= 0) {
+                msgCtxt.setVariable(varName("error"), error.substring(ch+2).trim());
+            }
+            else {
+                msgCtxt.setVariable(varName("error"), error);
+            }
+            msgCtxt.setVariable(varName("stacktrace"), ExceptionUtils.getStackTrace(e));
+            return ExecutionResult.ABORT;
+        }
+
+        return ExecutionResult.SUCCESS;
+    }
+}

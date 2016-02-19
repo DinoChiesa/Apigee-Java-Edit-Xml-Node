@@ -1,0 +1,17 @@
+<RaiseFault name='RF-MissingQueryParam'>
+  <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+  <FaultResponse>
+    <Set>
+      <Payload contentType='text/xml'><error>
+  <message>invalid request - missing query param</message>
+  <hint>
+    <property name="content-type" value="text/xml or application/xml"/>
+    <property name="queryparams" value="texttoadd or xpath"/>
+  </hint>
+</error>
+</Payload>
+      <StatusCode>400</StatusCode>
+      <ReasonPhrase>Bad Request</ReasonPhrase>
+    </Set>
+  </FaultResponse>
+</RaiseFault>

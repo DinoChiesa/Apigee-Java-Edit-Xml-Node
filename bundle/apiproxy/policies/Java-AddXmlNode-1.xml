@@ -1,0 +1,11 @@
+<JavaCallout name='Java-AddXmlNode-1'>
+  <Properties>
+    <Property name='source'>request.content</Property>
+    <Property name='new-node-type'>text</Property>
+    <Property name='new-node-text'>{request.queryparam.texttoadd}</Property>
+    <Property name='xpath'>{request.queryparam.xpath}</Property>
+    <Property name='action'>append</Property>
+  </Properties>
+  <ClassName>com.dinochiesa.edgecallouts.AddXmlNode</ClassName>
+  <ResourceURL>java://edge-custom-add-xml-node.jar</ResourceURL>
+</JavaCallout>

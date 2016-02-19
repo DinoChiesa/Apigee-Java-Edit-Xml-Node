@@ -1,0 +1,14 @@
+{
+  "input" : {
+    "debug" : "true",
+    "new-node-text" : "<newelement>seven</newelement>",
+    "new-node-type" : "element",
+    "xpath" : "/root/A",
+    "action" : "insert-before",
+    "message-content" : "<root><A attr1='fred'>text1</A></root>"
+  },
+  "expected" : {
+    "success" : "true",
+    "message-content" : "<root><newelement>seven</newelement><A attr1='fred'>text1</A></root>"
+  }
+}

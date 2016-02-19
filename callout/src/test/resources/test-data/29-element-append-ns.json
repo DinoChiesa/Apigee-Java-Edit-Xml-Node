@@ -1,0 +1,15 @@
+{
+  "input" : {
+    "debug" : "true",
+    "xmlns:ns1" : "urn:796DFC84-130F",
+    "new-node-text" : "<newelement>seven</newelement>",
+    "new-node-type" : "element",
+    "xpath" : "/ns1:root/ns1:A",
+    "action" : "append",
+    "message-content" : "<root xmlns='urn:796DFC84-130F'><A attr1='fred'>text1</A></root>"
+  },
+  "expected" : {
+    "success" : "true",
+    "message-content" : "<root xmlns='urn:796DFC84-130F'><A attr1='fred'>text1<newelement xmlns=''>seven</newelement></A></root>"
+  }
+}

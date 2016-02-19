@@ -1,0 +1,15 @@
+{
+  "input" : {
+    "debug" : "false",
+    "new-node-text" : "<newelement>seven</newelement>",
+    "new-node-type" : "element",
+    "xpath" : "/root/A/text()",
+    "action" : "append",
+    "message-content" : "<root><A attr1='fred'>text1</A></root>"
+  },
+  "expected" : {
+    "success" : "false",
+    "error" : "An attempt was made to insert a node where it is not permitted.",
+    "message-content" : "does not matter"
+  }
+}
