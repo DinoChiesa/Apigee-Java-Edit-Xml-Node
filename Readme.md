@@ -122,6 +122,8 @@ The policy is configured via properties set in the XML.  You can set these prope
 
 ### Replacing a text node using XML namespaces
 
+Any property name that begins with {{xmlns:}} is treated as an xml namespace by the custom policy.  The policy can use any of these prefixes for xpath resolution. You must specify a prefix to apply an xpath to a document that uses namespaces. Of course the prefix you use in your xpath need not match the prefix used in the document, according to XML and XPath processing rules. Only the namepace is required to be the same. 
+
 ```xml
 <JavaCallout name='Java-AddXmlNode-2'>
   <Properties>
@@ -138,13 +140,41 @@ The policy is configured via properties set in the XML.  You can set these prope
 </JavaCallout>
 ```
 
+Applied against a source a document like this: 
+```xml
+ <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"> 
+  <soap:Header/> 
+  <soap:Body> 
+    <act:test xmlns:act="http://yyyy.com"> 
+      <abc> 
+        <act:demo>fokyCS2jrkE5s+bC25L1Aax5sK//FkYA1msxIyW7prOun0VwoSET73UXKyKJ7nmd3OwHq/08GXIpwlq3QBJuG7a4Xgm4Vk</act:demo> 
+      </abc> 
+    </act:test> 
+  </soap:Body> 
+</soap:Envelope> 
+```
+
+The above policy configuration would produce this output
+
+```xml
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"> 
+  <soap:Header/> 
+  <soap:Body> 
+    <act:test xmlns:act="http://yyyy.com"> 
+      <abc> 
+        <act:demo>THE VALUE OF request.queryparam.texttoinsert APPEARS HERE</act:demo> 
+      </abc> 
+    </act:test> 
+  </soap:Body> 
+</soap:Envelope>
+```
+
 
 
 
 ## Building:
 
-Requires Java 1.7, and Maven. 
-
+Building from source requires Java 1.7, and Maven. 
 
 1. unpack (if you can read this, you've already done that).
 
@@ -165,11 +195,12 @@ Requires Java 1.7, and Maven.
 
 - Apigee Edge expressions v1.0
 - Apigee Edge message-flow v1.0
-- codehaus jackson 1.9.7
+- codehaus jackson v1.9.7
+- testng v6.8.7 (for testing only) 
 
 These jars must be available on the classpath for the compile to
 succeed. (You do not need to worry about these jars if you are not building from source.)  The buildsetup.sh script will download the Apigee files for
-you automatically, and will insert them into your maven cache.  The pom file will take care of the other Jar. 
+you automatically, and will insert them into your maven cache.  The pom file will take care of the other Jars. 
 
 If you want to download them manually: 
 
@@ -178,7 +209,7 @@ produced by Apigee; contact Apigee support to obtain these jars to allow
 the compile, or get them here: 
 https://github.com/apigee/api-platform-samples/tree/master/doc-samples/java-cookbook/lib
 
-The other can be downloaded from Maven central. 
+The others can be downloaded from Maven central. 
 
 
 
