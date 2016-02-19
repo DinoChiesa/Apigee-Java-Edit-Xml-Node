@@ -174,6 +174,10 @@ The above policy configuration would produce this output
 ```
 
 
+## Example API Proxy
+
+You can find an example proxy bundle that uses the policy, [here in this repo](bundle/apiproxy).
+
 
 
 ## Building
@@ -193,11 +197,6 @@ Building from source requires Java 1.7, and Maven.
   ```
   This will build the jar and also run all the tests.
 
-
-
-## Example API Proxy
-
-You can find an example proxy bundle that uses the policy, [here in this repo](bundle/apiproxy).
 
 
 ## Build Dependencies
