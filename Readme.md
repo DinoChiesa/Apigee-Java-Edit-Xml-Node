@@ -147,12 +147,15 @@ Requires Java 1.7, and Maven.
 1. unpack (if you can read this, you've already done that).
 
 2. configure the build on your machine by loading the Apigee jars into your local cache
-  ```./buildsetup.sh```
+  ```
+  ./buildsetup.sh
+  ```
 
 2. Build with maven.  
-  ```mvn clean package```
-
-This will run tests.
+  ```
+  mvn clean package
+  ```
+  This will run tests.
 
 
 
