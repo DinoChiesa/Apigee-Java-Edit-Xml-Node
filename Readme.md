@@ -3,64 +3,73 @@
 This directory contains the Java source code and pom.xml file required to
 compile a simple custom policy for Apigee Edge. The policy adds a node to an XML document. 
 
-## Building:
+Suppose you have a document like this: 
+```xml
+ <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"> 
+  <soap:Header/> 
+  <soap:Body> 
+    <act:test xmlns:act="http://yyyy.com"> 
+      <abc> 
+        <act:demo>fokyCS2jrkE5s+bC25L1Aax5sK//FkYA1msxIyW7prOun0VwoSET73UXKyKJ7nmd3OwHq/08GXIpwlq3QBJuG7a4Xgm4Vk</act:demo> 
+      </abc> 
+    </act:test> 
+  </soap:Body> 
+</soap:Envelope> 
+```
 
-1. unpack (if you can read this, you've already done that).
+And you'd like to replace the text node in the middle of that document with something else, maybe the decrypted version of that string. This policy lets you do that, allowing you to transform the above into this: 
 
-2. configure the build on your machine by loading the Apigee jars into your local cache
-  ```./buildsetup.sh```
+```xml
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"> 
+  <soap:Header/> 
+  <soap:Body> 
+    <act:test xmlns:act="http://yyyy.com"> 
+      <abc> 
+        <act:demo>decrypted-text-here</act:demo> 
+      </abc> 
+    </act:test> 
+  </soap:Body> 
+</soap:Envelope>
+```
 
-2. Build with maven.  
-  ```mvn clean package```
+No coding required! 
 
-3. if you edit proxy bundles offline, copy the resulting jar file, available in  target/httpsig-edge-callout.jar to your apiproxy/resources/java directory.  If you don't edit proxy bundles offline, upload the jar file into the API Proxy via the Edge API Proxy Editor . 
 
-4. include an XML file for the Java callout policy in your
+## Using this policy
+
+You do not need to build the source code in order to use the policy in Apigee Edge. 
+All you need is the built JAR, and the appropriate configuration for the policy. 
+If you want to build it, feel free.  The instructions are at the bottom of this readme. 
+
+
+1. copy the jar file, available in  target/edge-custom-add-xml-node.jar , if you have built the jar, or in [the repo](bundle/apiproxy/resources/java/edge-custom-add-xml-node.jar) if you have not, to your apiproxy/resources/java directory.  You can do this offline, or using the graphical Proxy Editor in the Apigee Edge Admin Portal. 
+
+2. include an XML file for the Java callout policy in your
    apiproxy/resources/policies directory. It should look
    like this:  
    ```xml
     <JavaCallout name='Java-AddXmlNode-1'>
+        ...
       <ClassName>com.dinochiesa.edgecallouts.AddXmlNode</ClassName>
       <ResourceURL>java://edge-custom-add-xml-node.jar</ResourceURL>
     </JavaCallout>
    ```  
 
-5. use the Edge UI, or a command-line tool like pushapi (See
+3. use the Edge UI, or a command-line tool like pushapi (See
    https://github.com/carloseberhardt/apiploy) or similar to
    import the proxy into an Edge organization, and then deploy the proxy . 
    Eg,    
-   ```./pushapi -v -d -o ORGNAME -e test -n add-xml-node bundle```b
+   ```./pushapi -v -d -o ORGNAME -e test -n add-xml-node ```b
 
-6. Use a client to generate and send http requests to the proxy. Eg,   
+4. Use a client to generate and send http requests to the proxy you just deployed . Eg,   
    ```
 curl -i -X POST -H content-type:text/xml \
-  'http://deecee-test.apigee.net/add-xml-node/t1?texttoadd=seven&xpath=/root/a/text()' \
+  'http://ORGNAME-test.apigee.net/add-xml-node/t1?texttoadd=seven&xpath=/root/a/text()' \
   -d '<root><a>beta</a></root>'
 ```
 
 
-
-## Dependencies
-
-- Apigee Edge expressions v1.0
-- Apigee Edge message-flow v1.0
-- codehaus jackson 1.9.7
-
-These jars must be available on the classpath for the compile to
-succeed. The buildsetup.sh script will download the Apigee files for
-you automatically, and will insert them into your maven cache.  The pom file will take care of the other Jar. 
-
-If you want to download them manually: 
-
-The first two jars are
-produced by Apigee; contact Apigee support to obtain these jars to allow
-the compile, or get them here: 
-https://github.com/apigee/api-platform-samples/tree/master/doc-samples/java-cookbook/lib
-
-The other can be downloaded from Maven central. 
-
-
-## Notes
+## Notes on Usage
 
 There is one callout class, com.dinochiesa.edgecallouts.AddXmlNode.
 
@@ -126,6 +135,46 @@ The policy is configured via properties set in the XML.  You can set these prope
   <ResourceURL>java://edge-custom-add-xml-node.jar</ResourceURL>
 </JavaCallout>
 ```
+
+
+
+
+## Building:
+
+Requires Java 1.7, and Maven. 
+
+
+1. unpack (if you can read this, you've already done that).
+
+2. configure the build on your machine by loading the Apigee jars into your local cache
+  ```./buildsetup.sh```
+
+2. Build with maven.  
+  ```mvn clean package```
+
+This will run tests.
+
+
+
+## Build Dependencies
+
+- Apigee Edge expressions v1.0
+- Apigee Edge message-flow v1.0
+- codehaus jackson 1.9.7
+
+These jars must be available on the classpath for the compile to
+succeed. The buildsetup.sh script will download the Apigee files for
+you automatically, and will insert them into your maven cache.  The pom file will take care of the other Jar. 
+
+If you want to download them manually: 
+
+The first two jars are
+produced by Apigee; contact Apigee support to obtain these jars to allow
+the compile, or get them here: 
+https://github.com/apigee/api-platform-samples/tree/master/doc-samples/java-cookbook/lib
+
+The other can be downloaded from Maven central. 
+
 
 
 ## Bugs
