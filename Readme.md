@@ -61,7 +61,7 @@ If you want to build it, feel free.  The instructions are at the bottom of this 
    https://github.com/carloseberhardt/apiploy) or similar to
    import the proxy into an Edge organization, and then deploy the proxy . 
    Eg,    
-   ```./pushapi -v -d -o ORGNAME -e test -n add-xml-node ```b
+   ```./pushapi -v -d -o ORGNAME -e test -n add-xml-node ```
 
 4. Use a client to generate and send http requests to the proxy you just deployed . Eg,   
    ```
