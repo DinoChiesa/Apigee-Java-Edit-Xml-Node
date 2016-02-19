@@ -10,7 +10,7 @@ Suppose you have a document like this:
   <soap:Body> 
     <act:test xmlns:act="http://yyyy.com"> 
       <abc> 
-        <act:demo>fokyCS2jrkE5s+bC25L1Aax5sK//FkYA1msxIyW7prOun0VwoSET73UXKyKJ7nmd3OwHq/08GXIpwlq3QBJuG7a4Xgm4Vk</act:demo> 
+        <act:demo>fokyCS2jrkE5s+bC25L1Aax5sK....08GXIpwlq3QBJuG7a4Xgm4Vk</act:demo> 
       </abc> 
     </act:test> 
   </soap:Body> 
@@ -147,7 +147,7 @@ Applied against a source a document like this:
   <soap:Body> 
     <act:test xmlns:act="http://yyyy.com"> 
       <abc> 
-        <act:demo>fokyCS2jrkE5s+bC25L1Aax5sK//FkYA1msxIyW7prOun0VwoSET73UXKyKJ7nmd3OwHq/08GXIpwlq3QBJuG7a4Xgm4Vk</act:demo> 
+        <act:demo>fokyCS2jrkE5s+bC25L1Aax5sK...J7nmd3OwHq/08GXIpwlq3QBJuG7a4Xgm4Vk</act:demo> 
       </abc> 
     </act:test> 
   </soap:Body> 
@@ -172,7 +172,7 @@ The above policy configuration would produce this output
 
 
 
-## Building:
+## Building
 
 Building from source requires Java 1.7, and Maven. 
 
@@ -183,7 +183,7 @@ Building from source requires Java 1.7, and Maven.
   ./buildsetup.sh
   ```
 
-2. Build with maven.  
+3. Build with maven.  
   ```
   mvn clean package
   ```
