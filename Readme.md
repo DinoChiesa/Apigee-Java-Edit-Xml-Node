@@ -195,6 +195,11 @@ Building from source requires Java 1.7, and Maven.
 
 
 
+## Example API Proxy
+
+You can find an example proxy bundle that uses the policy, [here in this repo](bundle/apiproxy).
+
+
 ## Build Dependencies
 
 - Apigee Edge expressions v1.0
