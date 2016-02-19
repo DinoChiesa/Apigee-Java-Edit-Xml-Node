@@ -83,7 +83,7 @@ The policy is configured via properties set in the XML.  You can set these prope
 | xpath             | the xpath to resolve to a single node in the source document |
 | source            | the source xml document. This should be a context variable. Specifying this is optional.  If you omit this property, the policy will use "message.content" as the source. |
 | new-node-type     | should be one of element, attribute, text. |
-| new-node-text     | Depending on the value of new-node-type, this must take a value that corresponds to an element, attribute, or text node.  For an element, eg, <foo>bar</foo>.  For an attribute, do not use any quotes.  Eg, attr1=value.  Or, for a Text node, any text string. |
+| new-node-text     | Depending on the value of new-node-type, this must take a value that corresponds to an element, attribute, or text node.  For an element, eg, `<foo>bar</foo>`.  For an attribute, do not use any quotes.  Eg, attr1=value.  Or, for a Text node, any text string. |
 | action            | append, insert-before, or replace |
 | output-variable  | the name of a variable to hold the result. Optional. If not present, the result is placed into "message.content". |
 
@@ -126,7 +126,7 @@ The policy is configured via properties set in the XML.  You can set these prope
 
 ### Replacing a text node using XML namespaces
 
-Any property name that begins with {{xmlns:}} is treated as an xml namespace by the custom policy.  The policy can use any of these prefixes for xpath resolution. You must specify a prefix to apply an xpath to a document that uses namespaces. Of course the prefix you use in your xpath need not match the prefix used in the document, according to XML and XPath processing rules. Only the namepace is required to be the same. 
+Any property name that begins with `xmlns:` is treated as an xml prefix and namespace by the custom policy.  The policy can use any of these namespaces for xpath resolution. You must specify a prefix to apply an xpath to a document that uses namespaces. Of course the prefix you use in your xpath need not match the prefix used in the document, according to XML and XPath processing rules. Only the namepace is required to be the same. 
 
 ```xml
 <JavaCallout name='Java-AddXmlNode-2'>
