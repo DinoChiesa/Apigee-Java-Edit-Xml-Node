@@ -32,7 +32,9 @@ And you'd like to replace the text node in the middle of that document with some
 </soap:Envelope>
 ```
 
-No coding required! 
+Today, in Apigee Edge, you could do this with an XSLT policy and an XSLT module.
+But many people don't want to write or maintain XSLT. 
+This policy allows you to accomplish the task with No coding required! 
 
 
 ## Using this policy
