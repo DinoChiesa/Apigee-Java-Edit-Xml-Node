@@ -155,7 +155,7 @@ Requires Java 1.7, and Maven.
   ```
   mvn clean package
   ```
-  This will run tests.
+  This will build the jar and also run all the tests.
 
 
 
@@ -166,7 +166,7 @@ Requires Java 1.7, and Maven.
 - codehaus jackson 1.9.7
 
 These jars must be available on the classpath for the compile to
-succeed. The buildsetup.sh script will download the Apigee files for
+succeed. (You do not need to worry about these jars if you are not building from source.)  The buildsetup.sh script will download the Apigee files for
 you automatically, and will insert them into your maven cache.  The pom file will take care of the other Jar. 
 
 If you want to download them manually: 
