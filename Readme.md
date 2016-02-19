@@ -88,13 +88,6 @@ The policy is configured via properties set in the XML.  You can set these prope
 | output-variable  | the name of a variable to hold the result. Optional. If not present, the result is placed into "message.content". |
 
 
-* xpath - the xpath to resolve to a single node in the source document
-* source - the source xml document. This should be a context variable. Specifying this is optional.  If you omit this property, the policy will use "message.content" as the source. 
-* new-node-type - should be one of element, attribute, text.
-* new-node-text - Depending on the value of new-node-type, this must take a value that corresponds to an element, attribute, or text node.  For an element, eg, <foo>bar</foo>.  For an attribute, do not use any quotes.  Eg, attr1=value.  Or, for a Text node, any text string. 
-* action - append, insert-before, or replace
-* output-variable - the name of a variable to hold the result. Optional. If not present, the result is placed into "message.content". 
-
 
 ## Example Policy Configurations
 
