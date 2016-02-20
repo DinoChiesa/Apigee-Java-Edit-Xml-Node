@@ -16,6 +16,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import org.xml.sax.EntityResolver;
 import org.w3c.dom.Document;
 
 public class XmlUtils {
@@ -23,7 +24,20 @@ public class XmlUtils {
     private static DocumentBuilder getBuilder() throws ParserConfigurationException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setNamespaceAware(true);
-        return factory.newDocumentBuilder();
+        factory.setFeature("http://apache.org/xml/features/nonvalidating/load-dtd-grammar", false);
+        factory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        // prevent DTD entities from being resolved.
+        builder.setEntityResolver(new EntityResolver() {
+            @Override
+            public InputSource resolveEntity(String publicId, String systemId)
+                    throws SAXException, IOException {
+                return new InputSource(new StringReader(""));
+            }
+        });
+
+        return builder;
     }
     public static Document parseXml(InputStream in)
         throws IOException, SAXException, ParserConfigurationException {
