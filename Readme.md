@@ -227,4 +227,4 @@ The others can be downloaded from Maven central.
 
 ## Bugs
 
-None known.
+* If you try to insert an XML element that relies on an XML namespace, you must explicitly reference the namespace in the XML element. You cannot rely on the namespace prefix references. 
