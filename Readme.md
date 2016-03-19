@@ -47,7 +47,7 @@ All you need is the built JAR, and the appropriate configuration for the policy.
 If you want to build it, feel free.  The instructions are at the bottom of this readme. 
 
 
-1. copy the jar file, available in  target/edge-custom-edit-xml-node.jar , if you have built the jar, or in [the repo](bundle/apiproxy/resources/java/edge-custom-edit-xml-node.jar) if you have not, to your apiproxy/resources/java directory.  You can do this offline, or using the graphical Proxy Editor in the Apigee Edge Admin Portal. 
+1. copy the jar file, available in  target/edge-custom-edit-xml-node.jar , if you have built the jar, or in [the repo](bundle/apiproxy/resources/java/edge-custom-edit-xml-node.jar) if you have not, to your apiproxy/resources/java directory. You can do this offline, or using the graphical Proxy Editor in the Apigee Edge Admin Portal. 
 
 2. include an XML file for the Java callout policy in your
    apiproxy/resources/policies directory. It should look
@@ -259,12 +259,14 @@ Building from source requires Java 1.7, and Maven.
 
 - Apigee Edge expressions v1.0
 - Apigee Edge message-flow v1.0
-- codehaus jackson v1.9.7
-- testng v6.8.7 (for testing only) 
+- codehaus jackson v1.9.7 (needed only for building+running tests)
+- testng v6.8.7 (needed only for building+running tests)
+- jmockit v1.7 (needed only for building+running tests)
+
 
 These jars must be available on the classpath for the compile to
-succeed. (You do not need to worry about these jars if you are not building from source.)  The buildsetup.sh script will download the Apigee files for
-you automatically, and will insert them into your maven cache.  The pom file will take care of the other Jars. 
+succeed. You do not need to worry about these jars if you are not building from source. The buildsetup.sh script will download the Apigee files for
+you automatically, and will insert them into your maven cache. The pom file will take care of the other Jars. 
 
 If you want to download them manually: 
 

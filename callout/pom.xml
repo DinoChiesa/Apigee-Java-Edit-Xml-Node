@@ -76,14 +76,14 @@ do it manually by running these commands:
       <groupId>org.codehaus.jackson</groupId>
       <artifactId>jackson-core-asl</artifactId>
       <version>1.9.7</version>
-      <scope>compile</scope>
+      <scope>test</scope>
     </dependency>
 
     <dependency>
       <groupId>org.codehaus.jackson</groupId>
       <artifactId>jackson-mapper-asl</artifactId>
       <version>1.9.7</version>
-      <scope>compile</scope>
+      <scope>test</scope>
     </dependency>
 
     <dependency>
@@ -168,10 +168,6 @@ do it manually by running these commands:
                     <include name="${project.artifactId}.jar"/>
                     <!-- copy any required dependencies tht are not
                     already included in the Edge runtime: -->
-
-                    <include name="lib/jackson-databind-2.5.0.jar"/>
-                    <include name="lib/jackson-core-2.5.0.jar"/>
-                    <include name="lib/jackson-annotations-2.5.0.jar"/>
 
                     <!--                    -->
 
