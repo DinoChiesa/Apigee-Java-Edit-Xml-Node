@@ -278,7 +278,7 @@ The others can be downloaded from Maven central.
 
 ## License
 
-This code is licensed under the [LICENSE](Apache 2.0 License). This includes the Java code as well as the API Proxy configuration. 
+This code is licensed under the [Apache 2.0 License](LICENSE). This includes the Java code as well as the API Proxy configuration. 
 
 ## Bugs
 
