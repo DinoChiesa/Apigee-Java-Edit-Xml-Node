@@ -26,12 +26,12 @@ import com.apigee.flow.execution.ExecutionResult;
 import com.apigee.flow.message.MessageContext;
 import com.apigee.flow.message.Message;
 
-import com.dinochiesa.edgecallouts.AddXmlNode;
+import com.dinochiesa.edgecallouts.EditXmlNode;
 
 import org.codehaus.jackson.map.DeserializationConfig;
 import org.codehaus.jackson.map.ObjectMapper;
 
-public class TestAddXmlNodeCallout {
+public class TestEditXmlNodeCallout {
     private final static String testDataDir = "src/test/resources/test-data";
 
     MessageContext msgCtxt;
@@ -151,7 +151,7 @@ public class TestAddXmlNodeCallout {
 
         messageContent = tc.getInput().get("message-content");
 
-        AddXmlNode callout = new AddXmlNode(tc.getInput());  // properties
+        EditXmlNode callout = new EditXmlNode(tc.getInput());  // properties
 
         // execute and retrieve output
         ExecutionResult actualResult = callout.execute(msgCtxt, exeCtxt);

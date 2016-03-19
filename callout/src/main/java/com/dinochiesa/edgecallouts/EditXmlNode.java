@@ -3,10 +3,13 @@
 // This is the source code for a Java callout for Apigee Edge.
 // This callout adds a node into a XML document.
 //
+// --------------------------------------------
+// This code is licensed under the Apache 2.0 license. See the LICENSE
+// file that accompanies this source.
+//
 // ------------------------------------------------------------------
 
 package com.dinochiesa.edgecallouts;
-
 
 import com.apigee.flow.execution.ExecutionContext;
 import com.apigee.flow.execution.ExecutionResult;
@@ -47,16 +50,16 @@ import org.apache.commons.lang.text.StrSubstitutor;
 import javax.xml.xpath.XPathConstants;
 
 
-public class AddXmlNode implements Execution {
+public class EditXmlNode implements Execution {
     private static final String _varPrefix = "xml_";
 
-    private enum AddAction {
-        InsertBefore, Append, Replace
+    private enum EditAction {
+        InsertBefore, Append, Replace, Remove
     }
 
     private Map properties; // read-only
 
-    public AddXmlNode (Map properties) {
+    public EditXmlNode (Map properties) {
         this.properties = properties;
     }
 
@@ -110,12 +113,13 @@ public class AddXmlNode implements Execution {
         throw new IllegalStateException("new-node-type value is unknown: (" + nodetype + ")");
     }
 
-    private AddAction getAction(MessageContext msgCtxt) throws Exception {
+    private EditAction getAction(MessageContext msgCtxt) throws Exception {
         String action = getSimpleRequiredProperty("action", msgCtxt);
         action = action.toLowerCase();
-        if (action.equals("insert-before")) return AddAction.InsertBefore;
-        if (action.equals("append")) return AddAction.Append;
-        if (action.equals("replace")) return AddAction.Replace;
+        if (action.equals("insert-before")) return EditAction.InsertBefore;
+        if (action.equals("append")) return EditAction.Append;
+        if (action.equals("replace")) return EditAction.Replace;
+        if (action.equals("remove")) return EditAction.Remove;
         throw new IllegalStateException("action value is unknown: (" + action + ")");
     }
 
@@ -176,54 +180,6 @@ public class AddXmlNode implements Execution {
             return resolvedString;
         }
         return spec;
-    }
-
-
-    private void execute0 (Document document, MessageContext msgCtxt)
-        throws Exception
-    {
-        String xpath = getXpath(msgCtxt);
-        XPathEvaluator xpe = getXpe(msgCtxt);
-        NodeList nodes = (NodeList)xpe.evaluate(xpath, document, XPathConstants.NODESET);
-        validate(nodes);
-        AddAction action = getAction(msgCtxt);
-        short newNodeType = getNewNodeType(msgCtxt);
-        String text = getNewNodeText(msgCtxt);
-        Node newNode = null;
-        switch (newNodeType) {
-            case Node.ELEMENT_NODE:
-                // Create a duplicate node and transfer ownership of the
-                // new node into the destination document.
-                Document temp = XmlUtils.parseXml(text);
-                newNode = document.importNode(temp.getDocumentElement(), true);
-                break;
-            case Node.ATTRIBUTE_NODE:
-                if (text.indexOf("=") < 1) {
-                    throw new IllegalStateException("attribute spec must be name=value");
-                }
-                String[] parts = text.split("=",2);
-                if (parts.length != 2)
-                    throw new IllegalStateException("attribute spec must be name=value");
-                Attr attr = document.createAttribute(parts[0]);
-                attr.setValue(parts[1]);
-                newNode = attr;
-                break;
-            case Node.TEXT_NODE:
-                newNode = document.createTextNode(text);
-                break;
-        }
-
-        switch (action) {
-            case InsertBefore:
-                insertBefore(nodes,newNode,newNodeType);
-                break;
-            case Append:
-                append(nodes,newNode,newNodeType);
-                break;
-            case Replace:
-                replace(nodes,newNode,newNodeType);
-                break;
-        }
     }
 
 
@@ -288,6 +244,61 @@ public class AddXmlNode implements Execution {
         }
     }
 
+    private void remove(NodeList nodes) {
+        Node currentNode = nodes.item(0);
+        currentNode.getParentNode().removeChild(currentNode);
+    }
+
+    private void execute0 (Document document, MessageContext msgCtxt)
+        throws Exception
+    {
+        String xpath = getXpath(msgCtxt);
+        XPathEvaluator xpe = getXpe(msgCtxt);
+        NodeList nodes = (NodeList)xpe.evaluate(xpath, document, XPathConstants.NODESET);
+        validate(nodes);
+        EditAction action = getAction(msgCtxt);
+        if (action == EditAction.Remove) {
+            remove(nodes);
+            return;
+        }
+
+        short newNodeType = getNewNodeType(msgCtxt);
+        String text = getNewNodeText(msgCtxt);
+        Node newNode = null;
+        switch (newNodeType) {
+            case Node.ELEMENT_NODE:
+                // Create a duplicate node and transfer ownership of the
+                // new node into the destination document.
+                Document temp = XmlUtils.parseXml(text);
+                newNode = document.importNode(temp.getDocumentElement(), true);
+                break;
+            case Node.ATTRIBUTE_NODE:
+                if (text.indexOf("=") < 1) {
+                    throw new IllegalStateException("attribute spec must be name=value");
+                }
+                String[] parts = text.split("=",2);
+                if (parts.length != 2)
+                    throw new IllegalStateException("attribute spec must be name=value");
+                Attr attr = document.createAttribute(parts[0]);
+                attr.setValue(parts[1]);
+                newNode = attr;
+                break;
+            case Node.TEXT_NODE:
+                newNode = document.createTextNode(text);
+                break;
+        }
+        switch (action) {
+            case InsertBefore:
+                insertBefore(nodes,newNode,newNodeType);
+                break;
+            case Append:
+                append(nodes,newNode,newNodeType);
+                break;
+            case Replace:
+                replace(nodes,newNode,newNodeType);
+                break;
+        }
+    }
 
     public ExecutionResult execute (final MessageContext msgCtxt,
                                     final ExecutionContext execContext) {

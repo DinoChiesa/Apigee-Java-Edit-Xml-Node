@@ -1,4 +1,4 @@
-<JavaCallout name='Java-AddXmlNode-1'>
+<JavaCallout name='Java-AppendXmlNode'>
   <Properties>
     <Property name='source'>request.content</Property>
     <Property name='new-node-type'>text</Property>

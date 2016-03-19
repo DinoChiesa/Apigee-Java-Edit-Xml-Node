@@ -1,4 +1,4 @@
-<JavaCallout name='Java-AddXmlNode-2'>
+<JavaCallout name='Java-ReplaceXmlNode'>
   <Properties>
     <Property name='xmlns:soap'>http://schemas.xmlsoap.org/soap/envelope/</Property>
     <Property name='xmlns:act'>http://yyyy.com</Property>

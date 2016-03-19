@@ -4,9 +4,9 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.apigee.callout</groupId>
-  <artifactId>edge-custom-add-xml-node</artifactId>
+  <artifactId>edge-custom-edit-xml-node</artifactId>
   <version>1.0-SNAPSHOT</version>
-  <name>EdgeCustomAddXmlNode</name>
+  <name>EdgeCustomEditXmlNode</name>
   <url>http://maven.apache.org</url>
   <packaging>jar</packaging>
   <properties>

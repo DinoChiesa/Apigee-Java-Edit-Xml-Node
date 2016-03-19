@@ -1,0 +1,13 @@
+{
+  "input" : {
+    "debug" : "true",
+    "xmlns:soap" : "http://schemas.xmlsoap.org/soap/envelope/",
+    "xpath" : "/soap:Envelope/soap:Header",
+    "action" : "remove",
+    "message-content" : "<soap:Envelope xmlns:soap='http://schemas.xmlsoap.org/soap/envelope/'><soap:Header><element1/><element2/></soap:Header><soap:Body><act:test xmlns:act='http://yyyy.com'><abc><act:demo>fokyCS2jrkE5s+bC25L1Aax5sK....08GXIpwlq3QBJuG7a4Xgm4Vk</act:demo></abc></act:test></soap:Body></soap:Envelope>"
+  },
+  "expected" : {
+    "success" : "true",
+    "message-content" : "<soap:Envelope xmlns:soap='http://schemas.xmlsoap.org/soap/envelope/'><soap:Body><act:test xmlns:act='http://yyyy.com'><abc><act:demo>fokyCS2jrkE5s+bC25L1Aax5sK....08GXIpwlq3QBJuG7a4Xgm4Vk</act:demo></abc></act:test></soap:Body></soap:Envelope>"
+  }
+}

@@ -1,0 +1,11 @@
+<JavaCallout name='Java-RemoveSoapHeader'>
+  <Properties>
+    <Property name='xmlns:soap'>http://schemas.xmlsoap.org/soap/envelope/</Property>
+    <Property name='xmlns:act'>http://yyyy.com</Property>
+    <Property name='source'>request.content</Property>
+    <Property name='xpath'>/soap:Envelope/soap:Header</Property>
+    <Property name='action'>remove</Property>
+  </Properties>
+  <ClassName>com.dinochiesa.edgecallouts.AddXmlNode</ClassName>
+  <ResourceURL>java://edge-custom-add-xml-node.jar</ResourceURL>
+</JavaCallout>
