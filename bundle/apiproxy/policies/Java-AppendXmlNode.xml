@@ -6,6 +6,6 @@
     <Property name='xpath'>{request.queryparam.xpath}</Property>
     <Property name='action'>append</Property>
   </Properties>
-  <ClassName>com.dinochiesa.edgecallouts.AddXmlNode</ClassName>
-  <ResourceURL>java://edge-custom-add-xml-node.jar</ResourceURL>
+  <ClassName>com.dinochiesa.edgecallouts.EditXmlNode</ClassName>
+  <ResourceURL>java://edge-custom-edit-xml-node.jar</ResourceURL>
 </JavaCallout>
