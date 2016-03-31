@@ -178,7 +178,7 @@ public class TestEditXmlNodeCallout {
             else {
                 String expectedError = tc.getExpected().get("error");
                 if (expectedError != null) {
-                    String actualError = msgCtxt.getVariable("xml_error");
+                    String actualError = msgCtxt.getVariable("editxml_error");
                     Assert.assertEquals(actualError, expectedError, "error not as expected");
                 }
             }

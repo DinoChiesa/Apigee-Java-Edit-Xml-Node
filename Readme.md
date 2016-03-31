@@ -60,8 +60,7 @@ If you want to build it, feel free.  The instructions are at the bottom of this 
     </JavaCallout>
    ```  
 
-3. use the Edge UI, or a command-line tool like pushapi (See
-   https://github.com/carloseberhardt/apiploy) or similar to
+3. use the Edge UI, or a command-line tool like [pushapi](https://github.com/carloseberhardt/apiploy) or [apigeetool](https://github.com/apigee/apigeetool-node) or similar to
    import the proxy into an Edge organization, and then deploy the proxy . 
    Eg,    
    ```./pushapi -v -d -o ORGNAME -e test -n edit-xml-node ```
@@ -71,7 +70,7 @@ If you want to build it, feel free.  The instructions are at the bottom of this 
 curl -i -X POST -H content-type:text/xml \
   'http://ORGNAME-test.apigee.net/edit-xml-node/t1?texttoadd=seven&xpath=/root/a/text()' \
   -d '<root><a>beta</a></root>'
-```
+   ```
 
 
 ## Notes on Usage
@@ -242,7 +241,7 @@ Building from source requires Java 1.7, and Maven.
 
 1. unpack (if you can read this, you've already done that).
 
-2. configure the build on your machine by loading the Apigee jars into your local cache
+2. Before building _the first time_, configure the build on your machine by loading the Apigee jars into your local cache:
   ```
   ./buildsetup.sh
   ```

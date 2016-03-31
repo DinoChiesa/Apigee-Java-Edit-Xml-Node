@@ -51,7 +51,7 @@ import javax.xml.xpath.XPathConstants;
 
 
 public class EditXmlNode implements Execution {
-    private static final String _varPrefix = "xml_";
+    private static final String _varPrefix = "editxml_";
 
     private enum EditAction {
         InsertBefore, Append, Replace, Remove
@@ -246,6 +246,11 @@ public class EditXmlNode implements Execution {
 
     private void remove(NodeList nodes) {
         Node currentNode = nodes.item(0);
+        // delete adjacent empty text node if it is empty/whitespace
+        Node prevSibling = currentNode.getPreviousSibling();
+        if (prevSibling != null && prevSibling.getNodeType() == Node.TEXT_NODE && prevSibling.getNodeValue().trim().isEmpty()) {
+            currentNode.getParentNode().removeChild(prevSibling);
+        }
         currentNode.getParentNode().removeChild(currentNode);
     }
 

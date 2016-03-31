@@ -3,6 +3,9 @@
     <Headers/>
   </Remove>
   <Set>
+    <Headers>
+      <Header name='content-type'>application/xml</Header>
+    </Headers>
     <StatusCode>200</StatusCode>
     <ReasonPhrase>OK</ReasonPhrase>
   </Set>

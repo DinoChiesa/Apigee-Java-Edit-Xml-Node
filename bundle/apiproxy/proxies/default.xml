@@ -32,14 +32,14 @@
       <Request>
         <Step>
           <Name>RF-MissingQueryParam</Name>
-          <Condition>request.queryparam.texttoadd = null OR request.queryparam.xpath = null</Condition>
+          <Condition>request.queryparam.nodetype= null OR request.queryparam.texttoinsert= null OR request.queryparam.xpath = null</Condition>
         </Step>
       </Request>
       <Response>
         <Step><Name>Java-AppendXmlNode</Name></Step>
         <Step><Name>AM-GoodResponse</Name></Step>
       </Response>
-      <Condition>(proxy.pathsuffix ~ "/t1") and (request.verb = "POST")</Condition>
+      <Condition>(proxy.pathsuffix ~ "/t1-append-node") and (request.verb = "POST")</Condition>
     </Flow>
 
     <Flow name='replace-text'>
@@ -47,14 +47,14 @@
       <Request>
         <Step>
           <Name>RF-MissingQueryParam</Name>
-          <Condition>request.queryparam.texttoinsert= null</Condition>
+          <Condition>request.queryparam.nodetype= null OR request.queryparam.texttoinsert= null OR request.queryparam.xpath = null</Condition>
         </Step>
       </Request>
       <Response>
         <Step><Name>Java-ReplaceXmlNode</Name></Step>
         <Step><Name>AM-GoodResponse</Name></Step>
       </Response>
-      <Condition>(proxy.pathsuffix ~ "/t2") and (request.verb = "POST")</Condition>
+      <Condition>(proxy.pathsuffix ~ "/t2-replace-xml-node") and (request.verb = "POST")</Condition>
     </Flow>
 
     <Flow name='remove node'>
@@ -69,7 +69,7 @@
         <Step><Name>Java-RemoveXmlNode</Name></Step>
         <Step><Name>AM-GoodResponse</Name></Step>
       </Response>
-      <Condition>(proxy.pathsuffix ~ "/t3") and (request.verb = "POST")</Condition>
+      <Condition>(proxy.pathsuffix ~ "/t3-remove-xml-node") and (request.verb = "POST")</Condition>
     </Flow>
 
     <Flow name='remove soap header'>
@@ -79,7 +79,7 @@
         <Step><Name>Java-RemoveSoapHeader</Name></Step>
         <Step><Name>AM-GoodResponse</Name></Step>
       </Response>
-      <Condition>(proxy.pathsuffix ~ "/t4") and (request.verb = "POST")</Condition>
+      <Condition>(proxy.pathsuffix ~ "/t4-remove-soap-header") and (request.verb = "POST")</Condition>
     </Flow>
 
     <Flow name='unknown'>

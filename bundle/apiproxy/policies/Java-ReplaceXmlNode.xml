@@ -1,11 +1,9 @@
 <JavaCallout name='Java-ReplaceXmlNode'>
   <Properties>
-    <Property name='xmlns:soap'>http://schemas.xmlsoap.org/soap/envelope/</Property>
-    <Property name='xmlns:act'>http://yyyy.com</Property>
     <Property name='source'>request.content</Property>
-    <Property name='new-node-type'>text</Property>
+    <Property name='new-node-type'>{request.queryparam.nodetype}</Property>
     <Property name='new-node-text'>{request.queryparam.texttoinsert}</Property>
-    <Property name='xpath'>/soap:Envelope/soap:Body/act:test/abc/act:demo/text()</Property>
+    <Property name='xpath'>{request.queryparam.xpath}</Property>
     <Property name='action'>replace</Property>
   </Properties>
   <ClassName>com.dinochiesa.edgecallouts.EditXmlNode</ClassName>

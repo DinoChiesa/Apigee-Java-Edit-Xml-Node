@@ -1,0 +1,75 @@
+# -*- restclient -*-
+#
+# URLs for querying APIs for Edit-Xml-Node tests.
+
+
+:apiserver = http://deecee-test.apigee.net
+
+## append text to a node specified in Xpath
+
+POST :apiserver/edit-xml-node/t1-append-node?xpath=/Alpha/Bravo&texttoinsert=<Gamma/>&nodetype=element
+content-type: application/xml
+
+<Alpha>
+ <Bravo>
+   <Charlie>123445.09</Charlie>
+   <Delta/>
+ </Bravo>
+ <Hotel>
+   <Foxtrot>1776</Foxtrot>
+   <Charlie>17</Charlie>
+ </Hotel>
+</Alpha>
+
+
+## replace the text of a node specified in Xpath
+
+POST :apiserver/edit-xml-node/t2-replace-xml-node?xpath=/Alpha/Bravo/Charlie/text()&texttoinsert=7&nodetype=text
+content-type: application/xml
+
+<Alpha>
+ <Bravo>
+   <Charlie>123445.09</Charlie>
+   <Delta/>
+ </Bravo>
+ <Hotel>
+   <Foxtrot>1776</Foxtrot>
+   <Charlie>17</Charlie>
+ </Hotel>
+</Alpha>
+
+
+## Remove a node specified in Xpath
+
+POST :apiserver/edit-xml-node/t3-remove-xml-node?xpath=/Alpha/Bravo/Charlie
+content-type: application/xml
+
+<Alpha>
+ <Bravo>
+   <Charlie>123445.09</Charlie>
+   <Delta/>
+ </Bravo>
+ <Hotel>
+   <Foxtrot>1776</Foxtrot>
+   <Charlie>17</Charlie>
+ </Hotel>
+</Alpha>
+
+## Remove a SOAP header
+
+POST :apiserver/edit-xml-node/t4-remove-soap-header
+content-type: application/xml
+
+ <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"> 
+  <soap:Header>
+    <Element1>abcdefg</Element1>
+    <Element2>12989893903</Element2>
+  </soap:Header> 
+  <soap:Body> 
+    <act:test xmlns:act="http://yyyy.com"> 
+      <abc> 
+        <act:demo>fokyCS2jrkE5s+bC25L1Aax5sK....08GXIpwlq3QBJuG7a4Xgm4Vk</act:demo> 
+      </abc> 
+    </act:test> 
+  </soap:Body> 
+</soap:Envelope> 

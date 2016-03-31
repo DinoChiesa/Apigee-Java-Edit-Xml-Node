@@ -1,9 +1,7 @@
 <JavaCallout name='Java-RemoveXmlNode'>
   <Properties>
-    <Property name='xmlns:soap'>http://schemas.xmlsoap.org/soap/envelope/</Property>
-    <Property name='xmlns:act'>http://yyyy.com</Property>
     <Property name='source'>request.content</Property>
-    <Property name='xpath'>/soap:Envelope/soap:Body/act:test/abc/act:demo/text()</Property>
+    <Property name='xpath'>{request.queryparam.xpath}</Property>
     <Property name='action'>remove</Property>
   </Properties>
   <ClassName>com.dinochiesa.edgecallouts.EditXmlNode</ClassName>
