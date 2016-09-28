@@ -279,7 +279,8 @@ The others can be downloaded from Maven central.
 
 ## License
 
-This code is licensed under the [Apache 2.0 License](LICENSE). This includes the Java code as well as the API Proxy configuration. 
+This material is copyright 2015,2016 Apigee Corporation, 
+and is licensed under the [Apache 2.0 License](LICENSE). This includes the Java code as well as the API Proxy configuration. 
 
 ## Bugs
 
