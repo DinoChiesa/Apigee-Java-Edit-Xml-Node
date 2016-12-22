@@ -1,7 +1,8 @@
-// AddXmlNode.java
+// EditXmlNode.java
 //
 // This is the source code for a Java callout for Apigee Edge.
-// This callout adds a node into a XML document.
+// This callout adds a node into a XML document, or edits a node that is
+// already in a document.
 //
 // --------------------------------------------
 // This code is licensed under the Apache 2.0 license. See the LICENSE
@@ -163,7 +164,7 @@ public class EditXmlNode implements Execution {
         return xpe;
     }
 
-    // If the value of a property value begins and ends with curlies,
+    // If the value of a property contains a pair of curlies,
     // eg, {apiproxy.name}, then "resolve" the value by de-referencing
     // the context variable whose name appears between the curlies.
     private String resolvePropertyValue(String spec, MessageContext msgCtxt) {
