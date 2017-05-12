@@ -56,7 +56,7 @@ If you want to build it, feel free.  The instructions are at the bottom of this 
     <JavaCallout name='Java-EditXmlNode-1'>
         ...
       <ClassName>com.dinochiesa.edgecallouts.EditXmlNode</ClassName>
-      <ResourceURL>java://edge-custom-edit-xml-node.jar</ResourceURL>
+      <ResourceURL>java://edge-custom-edit-xml-node-1.0.4.jar</ResourceURL>
     </JavaCallout>
    ```  
 
@@ -109,7 +109,7 @@ NB: There is no support for namespace-qualified attributes.
     <Property name='action'>append</Property>
   </Properties>
   <ClassName>com.dinochiesa.edgecallouts.EditXmlNode</ClassName>
-  <ResourceURL>java://edge-custom-edit-xml-node.jar</ResourceURL>
+  <ResourceURL>java://edge-custom-edit-xml-node-1.0.4.jar</ResourceURL>
 </JavaCallout>
 ```
 
@@ -126,7 +126,7 @@ NB: There is no support for namespace-qualified attributes.
     <Property name='output-variable'>my_variable</Property>
   </Properties>
   <ClassName>com.dinochiesa.edgecallouts.EditXmlNode</ClassName>
-  <ResourceURL>java://edge-custom-edit-xml-node.jar</ResourceURL>
+  <ResourceURL>java://edge-custom-edit-xml-node-1.0.4.jar</ResourceURL>
 </JavaCallout>
 ```
 
@@ -146,7 +146,7 @@ Any property name that begins with `xmlns:` is treated as an xml prefix and name
     <Property name='action'>replace</Property>
   </Properties>
   <ClassName>com.dinochiesa.edgecallouts.EditXmlNode</ClassName>
-  <ResourceURL>java://edge-custom-edit-xml-node.jar</ResourceURL>
+  <ResourceURL>java://edge-custom-edit-xml-node-1.0.4.jar</ResourceURL>
 </JavaCallout>
 ```
 
@@ -193,7 +193,7 @@ Using the "remove" action, you can also remove a node (which may have children) 
     <Property name='action'>remove</Property>
   </Properties>
   <ClassName>com.dinochiesa.edgecallouts.EditXmlNode</ClassName>
-  <ResourceURL>java://edge-custom-edit-xml-node.jar</ResourceURL>
+  <ResourceURL>java://edge-custom-edit-xml-node-1.0.4.jar</ResourceURL>
 </JavaCallout>
 ```
 
@@ -279,7 +279,7 @@ The others can be downloaded from Maven central.
 
 ## License
 
-This material is copyright 2015,2016 Apigee Corporation, 
+This material is copyright 2015,2016 Apigee Corporation, 2017 Google Inc.
 and is licensed under the [Apache 2.0 License](LICENSE). This includes the Java code as well as the API Proxy configuration. 
 
 ## Bugs

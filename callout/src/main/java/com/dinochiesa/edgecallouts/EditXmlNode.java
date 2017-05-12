@@ -19,16 +19,15 @@ import com.apigee.flow.message.MessageContext;
 import com.apigee.flow.message.Message;
 import com.dinochiesa.util.XmlUtils;
 import com.dinochiesa.util.XPathEvaluator;
-import com.dinochiesa.util.TemplateString;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -48,11 +47,12 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.apache.commons.lang.exception.ExceptionUtils;
-import org.apache.commons.lang.text.StrSubstitutor;
 
 
 public class EditXmlNode implements Execution {
     private static final String _varPrefix = "editxml_";
+    private static final String variableReferencePatternString = "(.*?)\\{([^\\{\\} ]+?)\\}(.*?)";
+    private static final Pattern variableReferencePattern = Pattern.compile(variableReferencePatternString);
 
     private enum EditAction {
         InsertBefore, Append, Replace, Remove
@@ -168,21 +168,17 @@ public class EditXmlNode implements Execution {
     // eg, {apiproxy.name}, then "resolve" the value by de-referencing
     // the context variable whose name appears between the curlies.
     private String resolvePropertyValue(String spec, MessageContext msgCtxt) {
-        if (spec.indexOf('{') > -1 && spec.indexOf('}')>-1) {
-            // Replace ALL curly-braced items in the spec string with
-            // the value of the corresponding context variable.
-            TemplateString ts = new TemplateString(spec);
-            Map<String,String> valuesMap = new HashMap<String,String>();
-            for (String s : ts.variableNames) {
-                valuesMap.put(s, (String) msgCtxt.getVariable(s));
-            }
-            StrSubstitutor sub = new StrSubstitutor(valuesMap);
-            String resolvedString = sub.replace(ts.template);
-            return resolvedString;
+        Matcher matcher = variableReferencePattern.matcher(spec);
+        StringBuffer sb = new StringBuffer();
+        while (matcher.find()) {
+            matcher.appendReplacement(sb, "");
+            sb.append(matcher.group(1));
+            sb.append((String) msgCtxt.getVariable(matcher.group(2)));
+            sb.append(matcher.group(3));
         }
-        return spec;
+        matcher.appendTail(sb);
+        return sb.toString();
     }
-
 
     private void validate(NodeList nodes) throws IllegalStateException {
         int length = nodes.getLength();
