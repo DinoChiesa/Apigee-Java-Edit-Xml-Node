@@ -18,6 +18,7 @@ import com.apigee.flow.execution.spi.Execution;
 import com.apigee.flow.message.MessageContext;
 import com.apigee.flow.message.Message;
 import com.dinochiesa.util.XmlUtils;
+import com.dinochiesa.util.VariableRefResolver;
 import com.dinochiesa.util.XPathEvaluator;
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -48,11 +49,8 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.apache.commons.lang.exception.ExceptionUtils;
 
-
 public class EditXmlNode implements Execution {
     private static final String _varPrefix = "editxml_";
-    private static final String variableReferencePatternString = "(.*?)\\{([^\\{\\} ]+?)\\}(.*?)";
-    private static final Pattern variableReferencePattern = Pattern.compile(variableReferencePatternString);
 
     private enum EditAction {
         InsertBefore, Append, Replace, Remove
@@ -124,6 +122,15 @@ public class EditXmlNode implements Execution {
         throw new IllegalStateException("action value is unknown: (" + action + ")");
     }
 
+    // would be cleaner with a Java8 lambda
+    private VariableRefResolver.VariableResolver variableResolver(final MessageContext msgCtxt) {
+        return new VariableRefResolver.VariableResolver() {
+            public String get(String name) {
+                return (String) (msgCtxt.getVariable(name));
+            }
+        };
+    }
+
     private String getSimpleRequiredProperty(String propName, MessageContext msgCtxt) throws Exception {
         String value = (String) this.properties.get(propName);
         if (value == null) {
@@ -133,7 +140,7 @@ public class EditXmlNode implements Execution {
         if (value.equals("")) {
             throw new IllegalStateException(propName + " resolves to an empty string.");
         }
-        value = resolvePropertyValue(value, msgCtxt);
+        value = VariableRefResolver.resolve(value, variableResolver(msgCtxt));
         if (value == null || value.equals("")) {
             throw new IllegalStateException(propName + " resolves to an empty string.");
         }
@@ -145,39 +152,24 @@ public class EditXmlNode implements Execution {
         if (value == null) { return null; }
         value = value.trim();
         if (value.equals("")) { return null; }
-        value = resolvePropertyValue(value, msgCtxt);
+        value = VariableRefResolver.resolve(value, variableResolver(msgCtxt));
         if (value == null || value.equals("")) { return null; }
         return value;
     }
 
     private XPathEvaluator getXpe(MessageContext msgCtxt) throws Exception {
         XPathEvaluator xpe = new XPathEvaluator();
+        VariableRefResolver.VariableResolver r = variableResolver(msgCtxt);
         // register namespaces
         for (Object key : properties.keySet()) {
             String k = (String) key;
             if (k.startsWith("xmlns:")) {
-                String value = resolvePropertyValue((String) properties.get(k), msgCtxt);
+                String value = VariableRefResolver.resolve((String) properties.get(k), r);
                 String[] parts = k.split(":");
                 xpe.registerNamespace(parts[1], value);
             }
         }
         return xpe;
-    }
-
-    // If the value of a property contains a pair of curlies,
-    // eg, {apiproxy.name}, then "resolve" the value by de-referencing
-    // the context variable whose name appears between the curlies.
-    private String resolvePropertyValue(String spec, MessageContext msgCtxt) {
-        Matcher matcher = variableReferencePattern.matcher(spec);
-        StringBuffer sb = new StringBuffer();
-        while (matcher.find()) {
-            matcher.appendReplacement(sb, "");
-            sb.append(matcher.group(1));
-            sb.append((String) msgCtxt.getVariable(matcher.group(2)));
-            sb.append(matcher.group(3));
-        }
-        matcher.appendTail(sb);
-        return sb.toString();
     }
 
     private void validate(NodeList nodes) throws IllegalStateException {
