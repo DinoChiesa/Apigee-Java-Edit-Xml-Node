@@ -51,7 +51,7 @@ All you need is the built JAR, and the appropriate configuration for the policy.
 If you want to build it, feel free.  The instructions are at the bottom of this readme.
 
 
-1. copy the jar file, available in  target/edge-custom-edit-xml-node-1.0.4.jar , if you have built the jar, or in [the repo](bundle/apiproxy/resources/java/edge-custom-edit-xml-node-1.0.4.jar) if you have not, to your apiproxy/resources/java directory. You can do this offline, or using the graphical Proxy Editor in the Apigee Edge Admin Portal.
+1. copy the jar file, available in  target/edge-custom-edit-xml-node-1.0.6.jar , if you have built the jar, or in [the repo](bundle/apiproxy/resources/java/edge-custom-edit-xml-node-1.0.6.jar) if you have not, to your apiproxy/resources/java directory. You can do this offline, or using the graphical Proxy Editor in the Apigee Edge Admin Portal.
 
 2. include an XML file for the Java callout policy in your
    apiproxy/resources/policies directory. It should look
@@ -60,7 +60,7 @@ If you want to build it, feel free.  The instructions are at the bottom of this 
     <JavaCallout name='Java-EditXmlNode-1'>
         ...
       <ClassName>com.google.apigee.edgecallouts.EditXmlNode</ClassName>
-      <ResourceURL>java://edge-custom-edit-xml-node-1.0.4.jar</ResourceURL>
+      <ResourceURL>java://edge-custom-edit-xml-node-1.0.6.jar</ResourceURL>
     </JavaCallout>
    ```
 
@@ -113,7 +113,7 @@ NB: There is no support for namespace-qualified attributes.
     <Property name='action'>append</Property>
   </Properties>
   <ClassName>com.google.apigee.edgecallouts.EditXmlNode</ClassName>
-  <ResourceURL>java://edge-custom-edit-xml-node-1.0.4.jar</ResourceURL>
+  <ResourceURL>java://edge-custom-edit-xml-node-1.0.6.jar</ResourceURL>
 </JavaCallout>
 ```
 
@@ -130,7 +130,7 @@ NB: There is no support for namespace-qualified attributes.
     <Property name='output-variable'>my_variable</Property>
   </Properties>
   <ClassName>com.google.apigee.edgecallouts.EditXmlNode</ClassName>
-  <ResourceURL>java://edge-custom-edit-xml-node-1.0.4.jar</ResourceURL>
+  <ResourceURL>java://edge-custom-edit-xml-node-1.0.6.jar</ResourceURL>
 </JavaCallout>
 ```
 
@@ -150,7 +150,7 @@ Any property name that begins with `xmlns:` is treated as an xml prefix and name
     <Property name='action'>replace</Property>
   </Properties>
   <ClassName>com.google.apigee.edgecallouts.EditXmlNode</ClassName>
-  <ResourceURL>java://edge-custom-edit-xml-node-1.0.4.jar</ResourceURL>
+  <ResourceURL>java://edge-custom-edit-xml-node-1.0.6.jar</ResourceURL>
 </JavaCallout>
 ```
 
@@ -197,7 +197,7 @@ Using the "remove" action, you can also remove a node (which may have children) 
     <Property name='action'>remove</Property>
   </Properties>
   <ClassName>com.google.apigee.edgecallouts.EditXmlNode</ClassName>
-  <ResourceURL>java://edge-custom-edit-xml-node-1.0.4.jar</ResourceURL>
+  <ResourceURL>java://edge-custom-edit-xml-node-1.0.6.jar</ResourceURL>
 </JavaCallout>
 ```
 
