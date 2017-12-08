@@ -5,6 +5,11 @@ It can be used
 on private cloud or public cloud instances of Edge.  It relies on [the custom Java policy](../callout) included here.
 
 
+## Disclaimer
+
+This example is not an official Google product, nor is it part of an official Google product.
+
+
 ## Example usage
 
 In all the examples that follow, you should replace the APIHOST with something like
@@ -30,7 +35,7 @@ curl -i -H 'content-type: application/xml' \
 </Alpha>'
 ```
 
-Result: 
+Result:
 
 ```xml
 <Alpha>
@@ -117,35 +122,35 @@ Result:
 curl -i -H 'content-type: application/xml' \
  -X POST \
  'http://APIHOST/edit-xml-node/t4-remove-soap-header' \
- -d ' <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"> 
+ -d ' <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
   <soap:Header>
     <Element1>abcdefg</Element1>
     <Element2>12989893903</Element2>
-  </soap:Header> 
-  <soap:Body> 
-    <act:test xmlns:act="http://yyyy.com"> 
-      <abc> 
-        <act:demo>fokyCS2jrkE5s+bC25L1Aax5sK....08GXIpwlq3QBJuG7a4Xgm4Vk</act:demo> 
-      </abc> 
-    </act:test> 
-  </soap:Body> 
+  </soap:Header>
+  <soap:Body>
+    <act:test xmlns:act="http://yyyy.com">
+      <abc>
+        <act:demo>fokyCS2jrkE5s+bC25L1Aax5sK....08GXIpwlq3QBJuG7a4Xgm4Vk</act:demo>
+      </abc>
+    </act:test>
+  </soap:Body>
 </soap:Envelope>'
 ```
 
 Result:
 
 ```xml
-<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"> 
-  <soap:Body> 
-    <act:test xmlns:act="http://yyyy.com"> 
-      <abc> 
-        <act:demo>fokyCS2jrkE5s+bC25L1Aax5sK....08GXIpwlq3QBJuG7a4Xgm4Vk</act:demo> 
-      </abc> 
-    </act:test> 
-  </soap:Body> 
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap:Body>
+    <act:test xmlns:act="http://yyyy.com">
+      <abc>
+        <act:demo>fokyCS2jrkE5s+bC25L1Aax5sK....08GXIpwlq3QBJuG7a4Xgm4Vk</act:demo>
+      </abc>
+    </act:test>
+  </soap:Body>
 </soap:Envelope>
 ```
 
 ## Notes
 
-Happy Editing!
+Happy XML Editing!
