@@ -281,6 +281,14 @@ https://github.com/apigee/api-platform-samples/tree/master/doc-samples/java-cook
 The others can be downloaded from Maven central.
 
 
+
+## Support
+
+This callout is open-source software, and is not a supported part of Apigee Edge.
+If you need assistance, you can try inquiring on
+[The Apigee Community Site](https://community.apigee.com).  There is no service-level
+guarantee for responses to inquiries regarding this callout.
+
 ## License
 
 This material is copyright 2015,2016 Apigee Corporation, 2017 Google Inc.
