@@ -26,16 +26,26 @@ public class VariableRefResolver {
         public String get(String name);
     }
 
-    // If the value of a property contains a pair of curlies,
-    // eg, {apiproxy.name}, then "resolve" the value by de-referencing
-    // the context variable whose name appears between the curlies.
+    /**
+     * Used to resolve dynamic runtime variables from the Apigee context.  If an inbound
+     * string includes substrings surrounded by curly braces, that is interpreted as a
+     * reference to a context variable and the reference is replaced with a value
+     * retrieved from the context.
+     *
+     * @param spec The variable name to be resolved
+     * @param map The VariableResolver
+     * @return The resolved variable value
+     */
     public static String resolve(String spec, VariableResolver map) {
         Matcher matcher = variableReferencePattern.matcher(spec);
         StringBuffer sb = new StringBuffer();
         while (matcher.find()) {
             matcher.appendReplacement(sb, "");
             sb.append(matcher.group(1));
-            sb.append((String) map.get(matcher.group(2)));
+            Object v =map.get(matcher.group(2));
+            if (v != null){
+                sb.append((String) v );
+            }
             sb.append(matcher.group(3));
         }
         matcher.appendTail(sb);
