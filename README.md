@@ -291,7 +291,7 @@ guarantee for responses to inquiries regarding this callout.
 
 ## License
 
-This material is copyright 2015,2016 Apigee Corporation, 2017 Google Inc.
+This material is copyright 2015,2016 Apigee Corporation, 2017-2018 Google LLC.
 and is licensed under the [Apache 2.0 License](LICENSE). This includes the Java code as well as the API Proxy configuration.
 
 ## Bugs
