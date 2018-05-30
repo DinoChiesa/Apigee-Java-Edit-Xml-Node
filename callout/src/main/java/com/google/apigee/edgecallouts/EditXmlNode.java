@@ -4,7 +4,7 @@
 // This callout adds a node into a XML document, or edits a node that is
 // already in a document.
 //
-// Copyright 2017 Google Inc.
+// Copyright 2017-2018 Google LLC.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -61,6 +61,7 @@ import org.apache.commons.lang.exception.ExceptionUtils;
 
 public class EditXmlNode implements Execution {
     private static final String _varPrefix = "editxml_";
+    private static final String DEFAULT_SOURCE_AND_DEST = "message.content";
 
     private enum EditAction {
         InsertBefore, Append, Replace, Remove
@@ -74,19 +75,28 @@ public class EditXmlNode implements Execution {
 
     private static final String varName(String s) { return _varPrefix + s; }
 
-    private Document getDocument(MessageContext msgCtxt) throws Exception {
+    private String getSource(MessageContext msgCtxt) throws Exception {
         String source = getSimpleOptionalProperty("source", msgCtxt);
-        if (source == null) {
+        return (source == null) ? DEFAULT_SOURCE_AND_DEST : source;
+    }
+
+    private Document getDocument(MessageContext msgCtxt) throws Exception {
+        String source = getSource(msgCtxt);
+        if (source == DEFAULT_SOURCE_AND_DEST) {
             return XmlUtils.parseXml(msgCtxt.getMessage().getContentAsStream());
         }
         String text = (String) msgCtxt.getVariable(source);
+        if (text == null) {
+            throw new IllegalStateException(String.format("source property (%s) resolves to null", source));
+        }
         return XmlUtils.parseXml(text);
     }
 
     private String getOutputVar(MessageContext msgCtxt) throws Exception {
         String dest = getSimpleOptionalProperty("output-variable", msgCtxt);
         if (dest == null) {
-            return "message.content";
+            String source = getSource(msgCtxt);
+            return (source == null) ? DEFAULT_SOURCE_AND_DEST : source;
         }
         return dest;
     }
@@ -94,6 +104,7 @@ public class EditXmlNode implements Execution {
     private String getXpath(MessageContext msgCtxt) throws Exception {
         return getSimpleRequiredProperty("xpath", msgCtxt);
     }
+
     private boolean getDebug() {
         String value = (String) this.properties.get("debug");
         if (value == null) return false;

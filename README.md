@@ -51,7 +51,7 @@ All you need is the built JAR, and the appropriate configuration for the policy.
 If you want to build it, feel free.  The instructions are at the bottom of this readme.
 
 
-1. copy the jar file, available in  target/edge-custom-edit-xml-node-1.0.6.jar , if you have built the jar, or in [the repo](bundle/apiproxy/resources/java/edge-custom-edit-xml-node-1.0.6.jar) if you have not, to your apiproxy/resources/java directory. You can do this offline, or using the graphical Proxy Editor in the Apigee Edge Admin Portal.
+1. copy the jar file, available in  target/edge-custom-edit-xml-node-1.0.7.jar , if you have built the jar, or in [the repo](bundle/apiproxy/resources/java/edge-custom-edit-xml-node-1.0.7.jar) if you have not, to your apiproxy/resources/java directory. You can do this offline, or using the graphical Proxy Editor in the Apigee Edge Admin Portal.
 
 2. include an XML file for the Java callout policy in your
    apiproxy/resources/policies directory. It should look
@@ -60,7 +60,7 @@ If you want to build it, feel free.  The instructions are at the bottom of this 
     <JavaCallout name='Java-EditXmlNode-1'>
         ...
       <ClassName>com.google.apigee.edgecallouts.EditXmlNode</ClassName>
-      <ResourceURL>java://edge-custom-edit-xml-node-1.0.6.jar</ResourceURL>
+      <ResourceURL>java://edge-custom-edit-xml-node-1.0.7.jar</ResourceURL>
     </JavaCallout>
    ```
 
@@ -113,7 +113,7 @@ NB: There is no support for namespace-qualified attributes.
     <Property name='action'>append</Property>
   </Properties>
   <ClassName>com.google.apigee.edgecallouts.EditXmlNode</ClassName>
-  <ResourceURL>java://edge-custom-edit-xml-node-1.0.6.jar</ResourceURL>
+  <ResourceURL>java://edge-custom-edit-xml-node-1.0.7.jar</ResourceURL>
 </JavaCallout>
 ```
 
@@ -130,7 +130,7 @@ NB: There is no support for namespace-qualified attributes.
     <Property name='output-variable'>my_variable</Property>
   </Properties>
   <ClassName>com.google.apigee.edgecallouts.EditXmlNode</ClassName>
-  <ResourceURL>java://edge-custom-edit-xml-node-1.0.6.jar</ResourceURL>
+  <ResourceURL>java://edge-custom-edit-xml-node-1.0.7.jar</ResourceURL>
 </JavaCallout>
 ```
 
@@ -150,7 +150,7 @@ Any property name that begins with `xmlns:` is treated as an xml prefix and name
     <Property name='action'>replace</Property>
   </Properties>
   <ClassName>com.google.apigee.edgecallouts.EditXmlNode</ClassName>
-  <ResourceURL>java://edge-custom-edit-xml-node-1.0.6.jar</ResourceURL>
+  <ResourceURL>java://edge-custom-edit-xml-node-1.0.7.jar</ResourceURL>
 </JavaCallout>
 ```
 
@@ -197,7 +197,7 @@ Using the "remove" action, you can also remove a node (which may have children) 
     <Property name='action'>remove</Property>
   </Properties>
   <ClassName>com.google.apigee.edgecallouts.EditXmlNode</ClassName>
-  <ResourceURL>java://edge-custom-edit-xml-node-1.0.6.jar</ResourceURL>
+  <ResourceURL>java://edge-custom-edit-xml-node-1.0.7.jar</ResourceURL>
 </JavaCallout>
 ```
 
@@ -218,7 +218,7 @@ Applied against a source a document like this:
 </soap:Envelope>
 ```
 
-The above policy configuration would produce this output
+The above policy configuration would produce this output:
 
 ```xml
 <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
@@ -231,6 +231,54 @@ The above policy configuration would produce this output
   </soap:Body>
 </soap:Envelope>
 ```
+
+
+### Removing an element depending on a text value
+
+Here's another example using the "remove" action. This one uses an XPath that selects based on the text value of a child.
+
+```xml
+<JavaCallout name='Java-RemoveElement'>
+  <Properties>
+    <Property name='xmlns:b'>b</Property>
+    <Property name='source'>contrivedMessage.content</Property>
+    <Property name='xpath'>/b:Response/b:document/b:documentProperties[b:name/text()='Property2']</Property>
+    <Property name='action'>remove</Property>
+  </Properties>
+  <ClassName>com.google.apigee.edgecallouts.EditXmlNode</ClassName>
+  <ResourceURL>java://edge-custom-edit-xml-node-1.0.7.jar</ResourceURL>
+</JavaCallout>
+```
+
+Applied against a source a document like this:
+```xml
+<b:Response xmlns:b="b">
+  <b:document>
+    <b:documentProperties>
+      <b:name>Property1</b:name>
+      <b:value>Valule1</b:value>
+    </b:documentProperties>
+    <b:documentProperties>
+      <b:name>Property2</b:name>
+      <b:value>Value2</b:value>
+    </b:documentProperties>
+  </b:document>
+</b:Response>
+```
+
+The above policy configuration would produce this output:
+
+```xml
+<b:Response xmlns:b="b">
+  <b:document>
+    <b:documentProperties>
+      <b:name>Property1</b:name>
+      <b:value>Valule1</b:value>
+    </b:documentProperties>
+  </b:document>
+</b:Response>
+```
+
 
 
 ## Example API Proxy
