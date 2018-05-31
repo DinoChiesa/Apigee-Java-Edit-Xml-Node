@@ -30,6 +30,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import mockit.Mock;
@@ -124,6 +125,7 @@ public class TestEditXmlNodeCallout {
             throw new IllegalStateException("no test directory.");
         }
         File[] files = testDir.listFiles();
+        Arrays.sort(files);
         if (files.length == 0) {
             throw new IllegalStateException("no tests found.");
         }
