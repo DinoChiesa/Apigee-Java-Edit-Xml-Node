@@ -36,7 +36,7 @@ import java.io.InputStream;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
-import java.util.HashMap;
+import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 import javax.xml.parsers.DocumentBuilder;
@@ -143,15 +143,6 @@ public class EditXmlNode implements Execution {
         throw new IllegalStateException("action value is unknown: (" + action + ")");
     }
 
-    // would be cleaner with a Java8 lambda
-    private VariableRefResolver.VariableResolver variableResolver(final MessageContext msgCtxt) {
-        return new VariableRefResolver.VariableResolver() {
-            public String get(String name) {
-                return (String) (msgCtxt.getVariable(name));
-            }
-        };
-    }
-
     private String getSimpleRequiredProperty(String propName, MessageContext msgCtxt) throws Exception {
         String value = (String) this.properties.get(propName);
         if (value == null) {
@@ -161,7 +152,7 @@ public class EditXmlNode implements Execution {
         if (value.equals("")) {
             throw new IllegalStateException(propName + " resolves to an empty string.");
         }
-        value = VariableRefResolver.resolve(value, variableResolver(msgCtxt));
+        value = VariableRefResolver.resolve(value, name -> (String) (msgCtxt.getVariable(name)) );
         if (value == null || value.equals("")) {
             throw new IllegalStateException(propName + " resolves to an empty string.");
         }
@@ -173,14 +164,14 @@ public class EditXmlNode implements Execution {
         if (value == null) { return null; }
         value = value.trim();
         if (value.equals("")) { return null; }
-        value = VariableRefResolver.resolve(value, variableResolver(msgCtxt));
+        value = VariableRefResolver.resolve(value, name -> (String) (msgCtxt.getVariable(name)) );
         if (value == null || value.equals("")) { return null; }
         return value;
     }
 
     private XPathEvaluator getXpe(MessageContext msgCtxt) throws Exception {
         XPathEvaluator xpe = new XPathEvaluator();
-        VariableRefResolver.VariableResolver r = variableResolver(msgCtxt);
+        Function<String,String> r = name -> (String) (msgCtxt.getVariable(name));
         // register namespaces
         for (Object key : properties.keySet()) {
             String k = (String) key;
@@ -264,9 +255,7 @@ public class EditXmlNode implements Execution {
         currentNode.getParentNode().removeChild(currentNode);
     }
 
-    private void execute0 (Document document, MessageContext msgCtxt)
-        throws Exception
-    {
+    private void execute0 (Document document, MessageContext msgCtxt) throws Exception {
         String xpath = getXpath(msgCtxt);
         XPathEvaluator xpe = getXpe(msgCtxt);
         NodeList nodes = (NodeList)xpe.evaluate(xpath, document, XPathConstants.NODESET);

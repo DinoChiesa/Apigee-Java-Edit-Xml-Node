@@ -17,14 +17,11 @@ package com.google.apigee.edgecallouts.util;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 import java.util.Map;
+import java.util.function.Function;
 
 public class VariableRefResolver {
     private static final String variableReferencePatternString = "(.*?)\\{([^\\{\\} ]+?)\\}(.*?)";
     private static final Pattern variableReferencePattern = Pattern.compile(variableReferencePatternString);
-
-    public interface VariableResolver {
-        public String get(String name);
-    }
 
     /**
      * Used to resolve dynamic runtime variables from the Apigee context.  If an inbound
@@ -36,15 +33,15 @@ public class VariableRefResolver {
      * @param map The VariableResolver
      * @return The resolved variable value
      */
-    public static String resolve(String spec, VariableResolver map) {
+    public static String resolve(String spec, Function<String, String> map) {
         Matcher matcher = variableReferencePattern.matcher(spec);
         StringBuffer sb = new StringBuffer();
         while (matcher.find()) {
             matcher.appendReplacement(sb, "");
             sb.append(matcher.group(1));
-            Object v =map.get(matcher.group(2));
+            Object v = map.apply(matcher.group(2));
             if (v != null){
-                sb.append((String) v );
+                sb.append( (String) v );
             }
             sb.append(matcher.group(3));
         }
