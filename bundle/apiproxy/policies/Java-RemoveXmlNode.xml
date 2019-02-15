@@ -5,5 +5,5 @@
     <Property name='action'>remove</Property>
   </Properties>
   <ClassName>com.google.apigee.edgecallouts.EditXmlNode</ClassName>
-  <ResourceURL>java://edge-custom-edit-xml-node-1.0.6.jar</ResourceURL>
+  <ResourceURL>java://edge-custom-edit-xml-node-1.0.9.jar</ResourceURL>
 </JavaCallout>

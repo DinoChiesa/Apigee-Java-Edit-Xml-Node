@@ -1,7 +1,9 @@
 # Java Edit Xml Node
 
-This directory contains the Java source code and pom.xml file required to
-compile a simple custom policy for Apigee Edge. The policy adds a node to an XML document, or removes a node from a document.
+This directory contains the Java source code and pom.xml file
+required to compile a simple custom policy for Apigee Edge. The
+policy adds a node to an XML document, or removes a node from a
+document.
 
 Suppose you have a document like this:
 ```xml
@@ -17,7 +19,10 @@ Suppose you have a document like this:
 </soap:Envelope>
 ```
 
-And you'd like to replace the text node in the middle of that document with something else, maybe the decrypted version of that string. This policy lets you do that, allowing you to transform the above into this:
+And you'd like to replace the text node in the middle of that
+document with something else, maybe the decrypted version of that
+string. This policy lets you do that, allowing you to transform the
+above into this:
 
 ```xml
 <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
@@ -32,26 +37,30 @@ And you'd like to replace the text node in the middle of that document with some
 </soap:Envelope>
 ```
 
-Today, in Apigee Edge, you could do this with an XSLT policy and an XSLT module.
-But many people don't want to write or maintain XSLT.
-This policy allows you to accomplish the task with No coding required!
+Today, in Apigee Edge, you could do this with an XSLT policy and an
+XSLT module.  But many people don't want to write or maintain XSLT.
+This policy allows you to accomplish the task with No coding
+required!
 
-This policy also allows you to remove a single node from an XML document, or to insert a single node into an XML document.
+This policy also allows you to remove a single node from an XML
+document, or to insert a single node into an XML document.
 
 
 ## Disclaimer
 
-This example is not an official Google product, nor is it part of an official Google product.
+This example is not an official Google product, nor is it part of an
+official Google product.
 
 
 ## Using this policy
 
-You do not need to build the source code in order to use the policy in Apigee Edge.
-All you need is the built JAR, and the appropriate configuration for the policy.
-If you want to build it, feel free.  The instructions are at the bottom of this readme.
+You do not need to build the source code in order to use the policy
+in Apigee Edge.  All you need is the built JAR, and the appropriate
+configuration for the policy.  If you want to build it, feel free.
+The instructions are at the bottom of this readme.
 
 
-1. copy the jar file, available in  target/edge-custom-edit-xml-node-1.0.8.jar , if you have built the jar, or in [the repo](bundle/apiproxy/resources/java/edge-custom-edit-xml-node-1.0.8.jar) if you have not, to your apiproxy/resources/java directory. You can do this offline, or using the graphical Proxy Editor in the Apigee Edge Admin Portal.
+1. copy the jar file, available in  target/edge-custom-edit-xml-node-1.0.9.jar , if you have built the jar, or in [the repo](bundle/apiproxy/resources/java/edge-custom-edit-xml-node-1.0.9.jar) if you have not, to your apiproxy/resources/java directory. You can do this offline, or using the graphical Proxy Editor in the Apigee Edge Admin Portal.
 
 2. include an XML file for the Java callout policy in your
    apiproxy/resources/policies directory. It should look
@@ -60,19 +69,19 @@ If you want to build it, feel free.  The instructions are at the bottom of this 
     <JavaCallout name='Java-EditXmlNode-1'>
         ...
       <ClassName>com.google.apigee.edgecallouts.EditXmlNode</ClassName>
-      <ResourceURL>java://edge-custom-edit-xml-node-1.0.8.jar</ResourceURL>
+      <ResourceURL>java://edge-custom-edit-xml-node-1.0.9.jar</ResourceURL>
     </JavaCallout>
    ```
 
-3. use the Edge UI, or a command-line tool like [pushapi](https://github.com/carloseberhardt/apiploy) or [apigeetool](https://github.com/apigee/apigeetool-node) or similar to
+3. use the Edge UI, or a command-line tool like [importAndDeploy.js](https://github.com/DinoChiesa/apigee-edge-js/blob/master/examples/importAndDeploy.js) or similar to
    import the proxy into an Edge organization, and then deploy the proxy .
    Eg,
-   ```./pushapi -v -d -o ORGNAME -e test -n edit-xml-node ```
+   ```node ./importAndDeploy.js -v -o $ORG -e $ENV -d ./bundle```
 
 4. Use a client to generate and send http requests to the proxy you just deployed . Eg,
    ```
    curl -i -X POST -H content-type:text/xml \
-     'http://ORGNAME-test.apigee.net/edit-xml-node/t1?texttoadd=seven&xpath=/root/a/text()' \
+     'https://$ORG-$ENV.apigee.net/edit-xml-node/t1?texttoadd=seven&xpath=/root/a/text()' \
      -d '<root><a>beta</a></root>'
    ```
 
@@ -113,7 +122,7 @@ NB: There is no support for namespace-qualified attributes.
     <Property name='action'>append</Property>
   </Properties>
   <ClassName>com.google.apigee.edgecallouts.EditXmlNode</ClassName>
-  <ResourceURL>java://edge-custom-edit-xml-node-1.0.8.jar</ResourceURL>
+  <ResourceURL>java://edge-custom-edit-xml-node-1.0.9.jar</ResourceURL>
 </JavaCallout>
 ```
 
@@ -130,7 +139,7 @@ NB: There is no support for namespace-qualified attributes.
     <Property name='output-variable'>my_variable</Property>
   </Properties>
   <ClassName>com.google.apigee.edgecallouts.EditXmlNode</ClassName>
-  <ResourceURL>java://edge-custom-edit-xml-node-1.0.8.jar</ResourceURL>
+  <ResourceURL>java://edge-custom-edit-xml-node-1.0.9.jar</ResourceURL>
 </JavaCallout>
 ```
 
@@ -150,7 +159,7 @@ Any property name that begins with `xmlns:` is treated as an xml prefix and name
     <Property name='action'>replace</Property>
   </Properties>
   <ClassName>com.google.apigee.edgecallouts.EditXmlNode</ClassName>
-  <ResourceURL>java://edge-custom-edit-xml-node-1.0.8.jar</ResourceURL>
+  <ResourceURL>java://edge-custom-edit-xml-node-1.0.9.jar</ResourceURL>
 </JavaCallout>
 ```
 
@@ -197,7 +206,7 @@ Using the "remove" action, you can also remove a node (which may have children) 
     <Property name='action'>remove</Property>
   </Properties>
   <ClassName>com.google.apigee.edgecallouts.EditXmlNode</ClassName>
-  <ResourceURL>java://edge-custom-edit-xml-node-1.0.8.jar</ResourceURL>
+  <ResourceURL>java://edge-custom-edit-xml-node-1.0.9.jar</ResourceURL>
 </JavaCallout>
 ```
 
@@ -246,7 +255,7 @@ Here's another example using the "remove" action. This one uses an XPath that se
     <Property name='action'>remove</Property>
   </Properties>
   <ClassName>com.google.apigee.edgecallouts.EditXmlNode</ClassName>
-  <ResourceURL>java://edge-custom-edit-xml-node-1.0.8.jar</ResourceURL>
+  <ResourceURL>java://edge-custom-edit-xml-node-1.0.9.jar</ResourceURL>
 </JavaCallout>
 ```
 
@@ -283,7 +292,8 @@ The above policy configuration would produce this output:
 
 ## Example API Proxy
 
-You can find an example proxy bundle that uses the policy, [here in this repo](bundle/apiproxy).
+You can find an example proxy bundle that uses the policy, [here in
+this repo](bundle/apiproxy).
 
 
 
@@ -310,38 +320,35 @@ Building from source requires Java 1.8, and Maven.
 
 - Apigee Edge expressions v1.0
 - Apigee Edge message-flow v1.0
-- codehaus jackson v1.9.7 (needed only for building+running tests)
+- fasterxml jackson (needed only for building+running tests)
 - testng v6.8.7 (needed only for building+running tests)
 - jmockit v1.7 (needed only for building+running tests)
 
 
 These jars must be available on the classpath for the compile to
-succeed. You do not need to worry about these jars if you are not building from source. The buildsetup.sh script will download the Apigee files for
-you automatically, and will insert them into your maven cache. The pom file will take care of the other Jars.
-
-If you want to download them manually:
-
-The first two jars are
-produced by Apigee; contact Apigee support to obtain these jars to allow
-the compile, or get them here:
-https://github.com/apigee/api-platform-samples/tree/master/doc-samples/java-cookbook/lib
-
-The others can be downloaded from Maven central.
-
+succeed. You do not need to worry about these jars if you are not
+building from source. The buildsetup.sh script will download the
+Apigee files for you automatically, and will insert them into your
+maven cache. The pom file will take care of the other Jars.
 
 
 ## Support
 
-This callout is open-source software, and is not a supported part of Apigee Edge.
-If you need assistance, you can try inquiring on
-[The Apigee Community Site](https://community.apigee.com).  There is no service-level
-guarantee for responses to inquiries regarding this callout.
+This callout is open-source software, and is not a supported part of
+Apigee Edge.  If you need assistance, you can try inquiring on [The
+Apigee Community Site](https://community.apigee.com).  There is no
+service-level guarantee for responses to inquiries regarding this
+callout.
 
 ## License
 
-This material is copyright 2015,2016 Apigee Corporation, 2017-2018 Google LLC.
-and is licensed under the [Apache 2.0 License](LICENSE). This includes the Java code as well as the API Proxy configuration.
+This material is copyright 2015,2016 Apigee Corporation, 2017-2018
+Google LLC.  and is licensed under the [Apache 2.0
+License](LICENSE). This includes the Java code as well as the API
+Proxy configuration.
 
 ## Bugs
 
-* If you try to insert an XML element that relies on an XML namespace, you must explicitly reference the namespace in the XML element. You cannot rely on the namespace prefix references.
+* If you try to insert an XML element that relies on an XML
+  namespace, you must explicitly reference the namespace in the XML
+  element. You cannot rely on the namespace prefix references.

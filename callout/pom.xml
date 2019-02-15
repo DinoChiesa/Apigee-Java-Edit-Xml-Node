@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.google.apigee.callout</groupId>
   <artifactId>edge-custom-edit-xml-node</artifactId>
-  <version>1.0.8</version>
+  <version>1.0.9</version>
   <name>EdgeCustomEditXmlNode</name>
   <url>http://maven.apache.org</url>
   <packaging>jar</packaging>
@@ -15,7 +15,7 @@
     <java.version>1.8</java.version>
     <testng.version>6.8.7</testng.version> <!-- current: 6.9.4 -->
     <jmockit.version>1.7</jmockit.version>
-    <jackson.version>2.9.2</jackson.version>
+    <jackson.version>2.9.8</jackson.version>
     <commons.lang.version>2.6</commons.lang.version>
     <apiproxy.java.rsrc.dir>../bundle/apiproxy/resources/java</apiproxy.java.rsrc.dir>
   </properties>
@@ -122,7 +122,7 @@ do it manually by running these commands:
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.7.0</version>
+        <version>3.8.0</version>
         <configuration>
           <source>${java.version}</source>
           <target>${java.version}</target>
@@ -132,14 +132,13 @@ do it manually by running these commands:
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
-        <version>3.0.2</version>
+        <version>3.1.1</version>
         <configuration>
           <archive>
             <!-- do not include the pom.xml file in the generated jar -->
             <addMavenDescriptor>false</addMavenDescriptor>
           </archive>
         </configuration>
-
       </plugin>
 
       <plugin>
@@ -165,6 +164,43 @@ do it manually by running these commands:
             </configuration>
             <goals>
               <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+
+     <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <version>3.0.0-M2</version>
+        <executions>
+          <execution>
+            <id>enforce-maven</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <requireMavenVersion>
+                  <version>3.0.5</version>
+                </requireMavenVersion>
+              </rules>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+       <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>versions-maven-plugin</artifactId>
+        <version>2.7</version>
+        <executions>
+          <execution>
+            <phase>compile</phase>
+            <goals>
+              <goal>display-dependency-updates</goal>
+              <goal>display-plugin-updates</goal>
             </goals>
           </execution>
         </executions>

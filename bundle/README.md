@@ -1,19 +1,22 @@
 # API Proxy bundle to demonstrate Edit-Xml-Node
 
-This Apigee Edge API Proxy demonstrates the use of the custom Java policy that Edits XML.
-It can be used
-on private cloud or public cloud instances of Edge.  It relies on [the custom Java policy](../callout) included here.
+This Apigee Edge API Proxy demonstrates the use of the custom Java
+policy that Edits XML.  It can be used on private cloud or public
+cloud instances of Edge.  It relies on [the custom Java
+policy](../callout) included here.
 
 
 ## Disclaimer
 
-This example is not an official Google product, nor is it part of an official Google product.
+This example is not an official Google product, nor is it part of an
+official Google product.
 
 
 ## Example usage
 
 In all the examples that follow, you should replace the APIHOST with something like
-* ORGNAME-ENVNAME.apigee.net, if running in the Apigee-managed public cloud
+
+* $ORG-$ENV.apigee.net, if running in the Apigee-managed public cloud
 * VHOST_IP:VHOST_PORT, if running in a self-managed cloud
 
 
@@ -22,7 +25,7 @@ In all the examples that follow, you should replace the APIHOST with something l
 ```
 curl -i -H 'content-type: application/xml' \
  -X POST \
- 'http://APIHOST/edit-xml-node/t1-append-node?xpath=/Alpha/Bravo&texttoinsert=<Gamma/>&nodetype=element' \
+ 'https://APIHOST/edit-xml-node/t1-append-node?xpath=/Alpha/Bravo&texttoinsert=<Gamma/>&nodetype=element' \
  -d '<Alpha>
  <Bravo>
    <Charlie>123445.09</Charlie>
@@ -56,7 +59,7 @@ Result:
 ```
 curl -i -H 'content-type: application/xml' \
  -X POST \
- 'http://APIHOST/edit-xml-node/t2-replace-xml-node?xpath=/Alpha/Bravo/Charlie/text()&texttoinsert=7&nodetype=text' \
+ 'https://APIHOST/edit-xml-node/t2-replace-xml-node?xpath=/Alpha/Bravo/Charlie/text()&texttoinsert=7&nodetype=text' \
  -d '<Alpha>
  <Bravo>
    <Charlie>123445.09</Charlie>
@@ -89,7 +92,7 @@ Result:
 ```
 curl -i -H 'content-type: application/xml' \
  -X POST \
- 'http://APIHOST/edit-xml-node/t3-remove-xml-node?xpath=/Alpha/Bravo/Charlie' \
+ 'https://APIHOST/edit-xml-node/t3-remove-xml-node?xpath=/Alpha/Bravo/Charlie' \
  -d '<Alpha>
  <Bravo>
    <Charlie>123445.09</Charlie>
@@ -121,7 +124,7 @@ Result:
 ```
 curl -i -H 'content-type: application/xml' \
  -X POST \
- 'http://APIHOST/edit-xml-node/t4-remove-soap-header' \
+ 'https://APIHOST/edit-xml-node/t4-remove-soap-header' \
  -d ' <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
   <soap:Header>
     <Element1>abcdefg</Element1>

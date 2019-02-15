@@ -3,7 +3,6 @@
   <HTTPProxyConnection>
     <BasePath>/edit-xml-node</BasePath>
     <Properties/>
-    <VirtualHost>default</VirtualHost>
     <VirtualHost>secure</VirtualHost>
   </HTTPProxyConnection>
 
