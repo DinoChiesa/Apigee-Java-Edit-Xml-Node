@@ -2,7 +2,7 @@
 
 This directory contains the Java source code and pom.xml file
 required to compile a simple custom policy for Apigee Edge. The
-policy adds a node to an XML document, or removes a node from a
+policy adds a node to an XML document, replaces a node in a document, or removes a node from a
 document.
 
 Suppose you have a document like this:
@@ -42,8 +42,8 @@ XSLT module.  But many people don't want to write or maintain XSLT.
 This policy allows you to accomplish the task with No coding
 required!
 
-This policy also allows you to remove a single node from an XML
-document, or to insert a single node into an XML document.
+In addition to allowing you to replace a node in a document, this policy also allows you to remove a single node from an XML
+document, or to insert a single node into an XML document. You could do this with XSLT, but ... then you'd have to code XSLT. This is just an alternative.
 
 
 ## Disclaimer
@@ -76,7 +76,9 @@ The instructions are at the bottom of this readme.
 3. use the Edge UI, or a command-line tool like [importAndDeploy.js](https://github.com/DinoChiesa/apigee-edge-js/blob/master/examples/importAndDeploy.js) or similar to
    import the proxy into an Edge organization, and then deploy the proxy .
    Eg,
-   ```node ./importAndDeploy.js -v -o $ORG -e $ENV -d ./bundle```
+   ```
+   node ./importAndDeploy.js -v -o $ORG -e $ENV -d ./bundle
+   ```
 
 4. Use a client to generate and send http requests to the proxy you just deployed . Eg,
    ```
