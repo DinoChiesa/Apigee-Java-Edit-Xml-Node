@@ -17,8 +17,11 @@ package com.google.apigee.edgecallouts.util;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringWriter;
 import java.io.StringReader;
+import java.io.StringWriter;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -28,10 +31,10 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import org.w3c.dom.Document;
+import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import org.xml.sax.EntityResolver;
-import org.w3c.dom.Document;
 
 public class XmlUtils {
 
@@ -53,6 +56,7 @@ public class XmlUtils {
 
         return builder;
     }
+
     public static Document parseXml(InputStream in)
         throws IOException, SAXException, ParserConfigurationException {
         DocumentBuilder builder = getBuilder();
@@ -60,11 +64,40 @@ public class XmlUtils {
         Document ret = builder.parse(new InputSource(bin));
         return ret;
     }
+
     public static Document parseXml(String s)
         throws IOException, SAXException, ParserConfigurationException {
         DocumentBuilder builder = getBuilder();
         InputSource is = new InputSource();
         is.setCharacterStream(new StringReader(s));
+        Document ret = builder.parse(is);
+        return ret;
+    }
+
+    public static Document parseXml(String fragment, Map<String,String> namespaces)
+        throws IOException, SAXException, ParserConfigurationException {
+        DocumentBuilder builder = getBuilder();
+        InputSource is = new InputSource();
+        if (!namespaces.isEmpty()) {
+            // prepend the namespace decls to the toplevel element
+            Pattern firstWhitespacePattern = Pattern.compile("^(\\s*)(<[\\w:_0-9]+)(\\s|>)");
+            Matcher matcher = firstWhitespacePattern.matcher(fragment);
+            if (matcher.find()) {
+                StringBuffer sb = new StringBuffer();
+                matcher.appendReplacement(sb,"");
+                sb.append(matcher.group(1));
+                sb.append(matcher.group(2));
+                for (Map.Entry<String, String> entry : namespaces.entrySet()) {
+                    String key = entry.getKey();
+                    String value = entry.getValue();
+                    sb.append(" xmlns:").append(key).append("='").append(value).append("' ");
+                }
+                sb.append(matcher.group(3));
+                matcher.appendTail(sb);
+                fragment = sb.toString();
+            }
+        }
+        is.setCharacterStream(new StringReader(fragment));
         Document ret = builder.parse(is);
         return ret;
     }

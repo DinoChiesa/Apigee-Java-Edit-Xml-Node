@@ -1,0 +1,26 @@
+<JavaCallout name='Java-InsertSoapHeader'>
+  <Properties>
+    <Property name='xmlns:soap'>http://schemas.xmlsoap.org/soap/envelope/</Property>
+    <Property name='xmlns:wsse'>http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd</Property>
+    <Property name='xmlns:wsu'>http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd</Property>
+    <Property name='source'>request.content</Property>
+    <Property name='xpath'>/soap:Envelope/soap:Body</Property>
+    <Property name='action'>insert-before</Property>
+    <Property name='new-node-type'>element</Property>
+    <!-- use cdata here so that namespaces do not need to be declared -->
+    <!-- References to context variables get expanded. -->
+    <Property name='new-node-text'><![CDATA[
+    <soap:Header>
+      <wsse:Security soap:mustUnderstand='1'>
+         <wsse:UsernameToken wsu:Id='UsernameToken-459'>
+            <wsse:Username>{my.username}</wsse:Username>
+            <wsse:Password Type='http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText'>{my.password}</wsse:Password>
+         </wsse:UsernameToken>
+      </wsse:Security>
+    </soap:Header>
+    ]]>
+    </Property>
+  </Properties>
+  <ClassName>com.google.apigee.edgecallouts.EditXmlNode</ClassName>
+  <ResourceURL>java://edge-custom-edit-xml-node-20200701.jar</ResourceURL>
+</JavaCallout>

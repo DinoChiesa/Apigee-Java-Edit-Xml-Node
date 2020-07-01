@@ -81,6 +81,17 @@
       <Condition>(proxy.pathsuffix ~ "/t4-remove-soap-header") and (request.verb = "POST")</Condition>
     </Flow>
 
+    <Flow name='insert soap header'>
+      <Description>insert a SOAP header element</Description>
+      <Request/>
+      <Response>
+        <Step><Name>AM-Settings</Name></Step>
+        <Step><Name>Java-InsertSoapHeader</Name></Step>
+        <Step><Name>AM-GoodResponse</Name></Step>
+      </Response>
+      <Condition>(proxy.pathsuffix ~ "/t5-insert-soap-header") and (request.verb = "POST")</Condition>
+    </Flow>
+
     <Flow name='unknown'>
       <!--
            applies as a "default" flow, in case none of the conditions

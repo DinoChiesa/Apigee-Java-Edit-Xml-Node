@@ -105,7 +105,7 @@ The policy is configured via properties set in the XML.  You can set these prope
 | output-variable   | Optional  | the name of a variable to hold the result. If not present, the result is placed into "message.content". |
 
 
-*The new-node-type and new-node-text are not required if removing a node. When you do use new-node-type, the type of the node to which the `xpath` resolves must match the `new-node-type` you specify in the configuration.  In other words, you can replace a text node with a text node (or append, or insert-before). Or, you can replace an element with an element (or append, or insert-before). You cannot use this policy to replace, for example, an element with a text node. Or to append a text node to an attribute.
+*The new-node-type and new-node-text are not required if removing a node. When you do use new-node-type, the type of the node to which the `xpath` resolves must match the `new-node-type` you specify in the configuration.  In other words, you can replace a text node with a text node. Or, you can replace an element with an element. Or you can use `insert-before` to insert an additional attribute before an existing attribute. You cannot use this policy to replace, for example, an element with a text node. Or to append a text node to an attribute. or to `insert-before` on an attribute if the result of the xpath reference is an element. All of this should make sense.
 
 NB: There is no support for namespace-qualified attributes.
 
@@ -127,6 +127,7 @@ NB: There is no support for namespace-qualified attributes.
   <ResourceURL>java://edge-custom-edit-xml-node-20200701.jar</ResourceURL>
 </JavaCallout>
 ```
+
 
 ### Replacing a text node
 
@@ -195,6 +196,29 @@ The above policy configuration would produce this output
 ```
 
 
+Whether inserting, appending, or replacing an element, the `new-node-text` may
+be a fragment that refers to XML namespaces that have been declared in the
+policy configuration. The policy at runtime will inject the appropriate
+namespace declarations into the toplevel element.  For example, this is ok:
+
+```xml
+<JavaCallout name='Java-InsertXmlNode-1'>
+  <Properties>
+    <!-- declare the namespace and prefix here -->
+    <Property name='xmlns:ns1>http://foo.bar</Property>
+    <Property name='source'>request.content</Property>
+    <Property name='new-node-type'>element</Property>
+    <!-- use cdata here so that namespaces do not need to be declared within the fragment -->
+    <Property name='new-node-text'><![CDATA[<ns1:Foo>text-value</ns1:Foo>]]></Property>
+    <Property name='xpath'>{request.queryparam.xpath}</Property>
+    <Property name='action'>append</Property>
+  </Properties>
+  <ClassName>com.google.apigee.edgecallouts.EditXmlNode</ClassName>
+  <ResourceURL>java://edge-custom-edit-xml-node-20200701.jar</ResourceURL>
+</JavaCallout>
+```
+
+
 ### Removing a SOAP Header
 
 Using the "remove" action, you can also remove a node (which may have children) from an XML document.
@@ -238,6 +262,70 @@ The above policy configuration would produce this output:
       <abc>
         <act:demo>fokyCS2jrkE5s+bC25L1Aax5sK...J7nmd3OwHq/08GXIpwlq3QBJuG7a4Xgm4Vk</act:demo>
       </abc>
+    </act:test>
+  </soap:Body>
+</soap:Envelope>
+```
+
+### Inserting a SOAP WS-Security Header
+
+Using the "insert-before" action, you can insert a soap security header into a SOAP document that does not have a header.
+
+
+```xml
+<JavaCallout name='Java-InsertSoapHeader'>
+  <Properties>
+    <Property name='xmlns:soap'>http://schemas.xmlsoap.org/soap/envelope/</Property>
+    <Property name='xmlns:wsse'>http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd</Property>
+    <Property name='xmlns:wsu'>http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd</Property>
+    <Property name='source'>request.content</Property>
+    <Property name='xpath'>/soap:Envelope/soap:Body</Property>
+    <Property name='action'>insert-before</Property>
+    <Property name='new-node-type'>element</Property>
+    <!-- use cdata here so that namespaces do not need to be declared -->
+    <!-- References to context variables get expanded. -->
+    <Property name='new-node-text'><![CDATA[
+    <soap:Header>
+      <wsse:Security soap:mustUnderstand='1'>
+         <wsse:UsernameToken wsu:Id='UsernameToken-459'>
+            <wsse:Username>{my.username}</wsse:Username>
+            <wsse:Password Type='http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText'>{my.password}</wsse:Password>
+         </wsse:UsernameToken>
+      </wsse:Security>
+    </soap:Header>
+    ]]>
+    </Property>
+  </Properties>
+  <ClassName>com.google.apigee.edgecallouts.EditXmlNode</ClassName>
+  <ResourceURL>java://edge-custom-edit-xml-node-20200701.jar</ResourceURL>
+</JavaCallout>
+```
+
+Applied against a source a document like this:
+```xml
+ <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap:Body>
+    <act:test xmlns:act="http://yyyy.com">
+      <abc>xyz</abc>
+    </act:test>
+  </soap:Body>
+</soap:Envelope>
+```
+
+The above policy configuration would produce this output:
+
+```xml
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap:Header xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+      <wsse:Security soap:mustUnderstand="1">
+         <wsse:UsernameToken wsu:Id="UsernameToken-459">
+            <wsse:Username>username</wsse:Username>
+            <wsse:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText">password</wsse:Password>
+         </wsse:UsernameToken>
+      </wsse:Security>
+    </soap:Header><soap:Body>
+    <act:test xmlns:act="http://yyyy.com">
+      <abc>xyz</abc>
     </act:test>
   </soap:Body>
 </soap:Envelope>
@@ -349,6 +437,4 @@ code as well as the API Proxy configuration.
 
 ## Bugs
 
-* If you try to insert an XML element that relies on an XML
-  namespace, you must explicitly reference the namespace in the XML
-  element. You cannot rely on the namespace prefix references.
+* when inserting elements, sometimes you get extraneous namespace declarations.  This is annoying but harmless.

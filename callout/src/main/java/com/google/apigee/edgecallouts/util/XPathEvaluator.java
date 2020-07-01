@@ -1,4 +1,4 @@
-// Copyright 2017-2018 Google LLC.
+// Copyright 2017-2020 Google LLC.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,7 +17,9 @@ package com.google.apigee.edgecallouts.util;
 import java.io.CharArrayReader;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import javax.xml.XMLConstants;
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.namespace.QName;
@@ -32,17 +34,15 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
-import javax.xml.xpath.XPathConstants;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import java.util.Hashtable;
 
 /**
  *
@@ -52,29 +52,38 @@ public class XPathEvaluator {
 
     private Transformer transformer;
     private DocumentBuilder docBuilder;
+    private Map<String, String> prefixi;
 
-    public XPathEvaluator(){
-        try {
+    private void init(Map<String,String> prefixes) throws Exception {
+
             transformer = TransformerFactory.newInstance().newTransformer();
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
             transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
-        } catch (TransformerConfigurationException ex) {
-            ex.printStackTrace();
-        }
-        try {
+
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             factory.setNamespaceAware(true);
             docBuilder = factory.newDocumentBuilder();
-        } catch (ParserConfigurationException ex) {
-            ex.printStackTrace();
+
+
+        if (prefixes == null) {
+            prefixi = new HashMap<String,String>();
+        }
+        else {
+            prefixi = prefixes;
         }
     }
 
-    private Hashtable<String, String> prefixi = new Hashtable<String, String> ();
-
-    public void registerNamespace(String prefix, String ns) {
-        prefixi.put(prefix, ns);
+    public XPathEvaluator() throws Exception {
+        init(null);
     }
+
+    public XPathEvaluator(Map<String,String> prefixes) throws Exception {
+        init(prefixes);
+    }
+
+    // public void registerNamespace(String prefix, String ns) {
+    //     prefixi.put(prefix, ns);
+    // }
 
     public String evalXPathToString(String xpath, Document doc) throws SAXException,IOException,TransformerException,XPathExpressionException {
         NodeList resultXML = (NodeList)evaluate(xpath, doc, XPathConstants.NODESET);
@@ -144,8 +153,8 @@ public class XPathEvaluator {
 
 
     private final static class CustomNamespaceResolver implements NamespaceContext {
-        private Hashtable<String,String> prefixes;
-        public CustomNamespaceResolver(Hashtable<String,String> prefixi) {
+        private Map<String,String> prefixes;
+        public CustomNamespaceResolver(Map<String,String> prefixi) {
             prefixes = prefixi;
         }
 

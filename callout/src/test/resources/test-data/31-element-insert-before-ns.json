@@ -10,6 +10,6 @@
   },
   "expected" : {
     "success" : "true",
-    "message-content" : "<root xmlns='urn:796DFC84-130F'><newelement xmlns=''>seven</newelement><A attr1='fred'>text1</A></root>"
+    "message-content" : "<root xmlns='urn:796DFC84-130F'><newelement xmlns:ns1='urn:796DFC84-130F' xmlns=''>seven</newelement><A attr1='fred'>text1</A></root>"
   }
 }

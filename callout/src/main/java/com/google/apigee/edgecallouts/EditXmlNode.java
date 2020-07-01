@@ -37,6 +37,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.regex.Matcher;
@@ -170,19 +171,17 @@ public class EditXmlNode implements Execution {
         return value;
     }
 
-    private XPathEvaluator getXpe(MessageContext msgCtxt) throws Exception {
-        XPathEvaluator xpe = new XPathEvaluator();
+    private Map<String,String> getNamespaces(MessageContext msgCtxt) throws Exception {
+        Map<String,String> namespaces = new HashMap<String,String>();
         Function<String,String> r = name -> (String) (msgCtxt.getVariable(name));
-        // register namespaces
         for (Object key : properties.keySet()) {
             String k = (String) key;
             if (k.startsWith("xmlns:")) {
-                String value = VariableRefResolver.resolve((String) properties.get(k), r);
-                String[] parts = k.split(":");
-                xpe.registerNamespace(parts[1], value);
+                String[] parts = k.split(":", 2);
+                namespaces.put(parts[1], VariableRefResolver.resolve((String) properties.get(k), r));
             }
         }
-        return xpe;
+        return namespaces;
     }
 
     private void validate(NodeList nodes) throws IllegalStateException {
@@ -258,7 +257,8 @@ public class EditXmlNode implements Execution {
 
     private void execute0 (Document document, MessageContext msgCtxt) throws Exception {
         String xpath = getXpath(msgCtxt);
-        XPathEvaluator xpe = getXpe(msgCtxt);
+        Map<String,String> namespaces = getNamespaces(msgCtxt);
+        XPathEvaluator xpe = new XPathEvaluator(namespaces);
         NodeList nodes = (NodeList)xpe.evaluate(xpath, document, XPathConstants.NODESET);
         validate(nodes);
         EditAction action = getAction(msgCtxt);
@@ -274,7 +274,7 @@ public class EditXmlNode implements Execution {
             case Node.ELEMENT_NODE:
                 // Create a duplicate node and transfer ownership of the
                 // new node into the destination document.
-                Document temp = XmlUtils.parseXml(text);
+                Document temp = XmlUtils.parseXml(text, namespaces);
                 newNode = document.importNode(temp.getDocumentElement(), true);
                 break;
             case Node.ATTRIBUTE_NODE:

@@ -1,0 +1,10 @@
+<AssignMessage name='AM-Settings'>
+  <AssignVariable>
+    <Name>my.username</Name>
+    <Value>person@example.com</Value>
+  </AssignVariable>
+  <AssignVariable>
+    <Name>my.password</Name>
+    <Value>VerySecret123</Value>
+  </AssignVariable>
+</AssignMessage>
