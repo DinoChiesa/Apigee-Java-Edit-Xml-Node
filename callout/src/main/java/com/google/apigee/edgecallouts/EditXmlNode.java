@@ -25,20 +25,22 @@ package com.google.apigee.edgecallouts;
 import com.apigee.flow.execution.ExecutionContext;
 import com.apigee.flow.execution.ExecutionResult;
 import com.apigee.flow.execution.spi.Execution;
-import com.apigee.flow.message.MessageContext;
 import com.apigee.flow.message.Message;
-import com.google.apigee.edgecallouts.util.XmlUtils;
+import com.apigee.flow.message.MessageContext;
 import com.google.apigee.edgecallouts.util.VariableRefResolver;
 import com.google.apigee.edgecallouts.util.XPathEvaluator;
+import com.google.apigee.edgecallouts.util.XmlUtils;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 import java.util.function.Function;
-import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -47,17 +49,16 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.sax.SAXSource;
-import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
+import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Attr;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
-import org.apache.commons.lang.exception.ExceptionUtils;
 
 public class EditXmlNode implements Execution {
     private static final String _varPrefix = "editxml_";
@@ -304,6 +305,13 @@ public class EditXmlNode implements Execution {
         }
     }
 
+    protected static String getStackTraceAsString(Throwable t) {
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        t.printStackTrace(pw);
+        return sw.toString();
+    }
+
     public ExecutionResult execute (final MessageContext msgCtxt,
                                     final ExecutionContext execContext) {
         try {
@@ -316,7 +324,7 @@ public class EditXmlNode implements Execution {
         }
         catch (Exception e) {
             if (getDebug()) {
-                System.out.println(ExceptionUtils.getStackTrace(e));
+                System.out.println(getStackTraceAsString(e));
             }
             String error = e.toString();
             msgCtxt.setVariable(varName("exception"), error);
@@ -327,7 +335,7 @@ public class EditXmlNode implements Execution {
             else {
                 msgCtxt.setVariable(varName("error"), error);
             }
-            msgCtxt.setVariable(varName("stacktrace"), ExceptionUtils.getStackTrace(e));
+            msgCtxt.setVariable(varName("stacktrace"), getStackTraceAsString(e));
             return ExecutionResult.ABORT;
         }
 
