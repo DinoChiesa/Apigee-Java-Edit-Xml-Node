@@ -7,5 +7,5 @@
     <Property name='action'>append</Property>
   </Properties>
   <ClassName>com.google.apigee.edgecallouts.EditXmlNode</ClassName>
-  <ResourceURL>java://edge-custom-edit-xml-node-20200701.jar</ResourceURL>
+  <ResourceURL>java://edge-custom-edit-xml-node-20200714.jar</ResourceURL>
 </JavaCallout>
