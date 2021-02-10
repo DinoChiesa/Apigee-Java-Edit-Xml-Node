@@ -4,9 +4,9 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.google.apigee.callout</groupId>
-  <artifactId>edge-custom-edit-xml-node</artifactId>
-  <version>20200714</version>
-  <name>EdgeCustomEditXmlNode</name>
+  <artifactId>apigee-custom-edit-xml-node</artifactId>
+  <version>20210210</version>
+  <name>ApigeeCustomEditXmlNode</name>
   <url>http://maven.apache.org</url>
   <packaging>jar</packaging>
   <properties>
@@ -103,6 +103,7 @@ do it manually by running these commands:
             </goals>
             <configuration>
               <outputDirectory>${project.build.directory}/lib</outputDirectory>
+              <includeScope>compile</includeScope>
               <overWriteReleases>false</overWriteReleases>
               <overWriteSnapshots>false</overWriteSnapshots>
               <overWriteIfNewer>true</overWriteIfNewer>
@@ -145,8 +146,9 @@ do it manually by running these commands:
                     <include name="${project.artifactId}-${project.version}.jar"/>
                     <!-- copy any required dependencies tht are not
                     already included in the Edge runtime: -->
-
-                    <include name="lib/commons-lang-${commons.lang.version}.jar"/>
+                    <include name="lib/*.jar"/>
+                    <exclude name="lib/message-flow-1.0.0.jar"/>
+                    <exclude name="lib/expressions-1.0.0.jar"/>
                     <!--                    -->
 
                   </fileset>

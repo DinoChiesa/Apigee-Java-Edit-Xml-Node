@@ -1,8 +1,8 @@
 # API Proxy bundle to demonstrate Edit-Xml-Node
 
-This Apigee Edge API Proxy demonstrates the use of the custom Java
+This Apigee API Proxy demonstrates the use of the custom Java
 policy that Edits XML.  It can be used on private cloud or public
-cloud instances of Edge.  It relies on [the custom Java
+cloud instances of Apigee.  It relies on [the custom Java
 policy](../callout) included here.
 
 
@@ -14,7 +14,7 @@ official Google product.
 
 ## Example usage
 
-The examples that follow assume Apigee SaaS and that the shell variables have been set appropriately: 
+The examples that follow assume Apigee classic SaaS and that the shell variables have been set appropriately:
 
 ```
 ORG=myorg
