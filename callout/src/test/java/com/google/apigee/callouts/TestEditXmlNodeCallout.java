@@ -50,24 +50,24 @@ public class TestEditXmlNodeCallout {
 
     msgCtxt =
         new MockUp<MessageContext>() {
-          private Map variables;
+          private Map<String,Object> variables;
 
           public void $init() {
-            variables = new HashMap();
+            variables = new HashMap<String,Object>();
           }
 
           @Mock()
-          public <T> T getVariable(final String name) {
+          public Object getVariable(final String name) {
             if (variables == null) {
-              variables = new HashMap();
+              variables = new HashMap<String,Object>();
             }
-            return (T) variables.get(name);
+            return variables.get(name);
           }
 
           @Mock()
           public boolean setVariable(final String name, final Object value) {
             if (variables == null) {
-              variables = new HashMap();
+              variables = new HashMap<String,Object>();
             }
             variables.put(name, value);
             return true;
@@ -76,7 +76,7 @@ public class TestEditXmlNodeCallout {
           @Mock()
           public boolean removeVariable(final String name) {
             if (variables == null) {
-              variables = new HashMap();
+              variables = new HashMap<String,Object>();
             }
             if (variables.containsKey(name)) {
               variables.remove(name);
