@@ -60,7 +60,7 @@ configuration for the policy.  If you want to build it, feel free.
 The instructions are at the bottom of this readme.
 
 
-1. copy the jar file, available in  target/apigee-custom-edit-xml-node-20210210.jar , if you have built the jar, or in [the repo](bundle/apiproxy/resources/java/apigee-custom-edit-xml-node-20210210.jar) if you have not, to your apiproxy/resources/java directory. You can do this offline, or using the graphical Proxy Editor in the Apigee Admin Portal.
+1. copy the jar file, available in  target/apigee-custom-edit-xml-node-20220104.jar , if you have built the jar, or in [the repo](bundle/apiproxy/resources/java/apigee-custom-edit-xml-node-20220104.jar) if you have not, to your apiproxy/resources/java directory. You can do this offline, or using the graphical Proxy Editor in the Apigee Admin Portal.
 
 2. include an XML file for the Java callout policy in your
    apiproxy/resources/policies directory. It should look
@@ -68,8 +68,8 @@ The instructions are at the bottom of this readme.
    ```xml
     <JavaCallout name='Java-EditXmlNode-1'>
         ...
-      <ClassName>com.google.apigee.edgecallouts.EditXmlNode</ClassName>
-      <ResourceURL>java://apigee-custom-edit-xml-node-20210210.jar</ResourceURL>
+      <ClassName>com.google.apigee.callouts.EditXmlNode</ClassName>
+      <ResourceURL>java://apigee-custom-edit-xml-node-20220104.jar</ResourceURL>
     </JavaCallout>
    ```
 
@@ -90,7 +90,7 @@ The instructions are at the bottom of this readme.
 
 ## Notes on Usage
 
-There is one callout class, com.google.apigee.edgecallouts.EditXmlNode.
+There is one callout class, com.google.apigee.callouts.EditXmlNode.
 
 The policy is configured via properties set in the XML.  You can set these properties:
 
@@ -123,8 +123,8 @@ NB: There is no support for namespace-qualified attributes.
     <Property name='xpath'>{request.queryparam.xpath}</Property>
     <Property name='action'>append</Property>
   </Properties>
-  <ClassName>com.google.apigee.edgecallouts.EditXmlNode</ClassName>
-  <ResourceURL>java://apigee-custom-edit-xml-node-20210210.jar</ResourceURL>
+  <ClassName>com.google.apigee.callouts.EditXmlNode</ClassName>
+  <ResourceURL>java://apigee-custom-edit-xml-node-20220104.jar</ResourceURL>
 </JavaCallout>
 ```
 
@@ -141,8 +141,8 @@ NB: There is no support for namespace-qualified attributes.
     <Property name='action'>replace</Property>
     <Property name='output-variable'>my_variable</Property>
   </Properties>
-  <ClassName>com.google.apigee.edgecallouts.EditXmlNode</ClassName>
-  <ResourceURL>java://apigee-custom-edit-xml-node-20210210.jar</ResourceURL>
+  <ClassName>com.google.apigee.callouts.EditXmlNode</ClassName>
+  <ResourceURL>java://apigee-custom-edit-xml-node-20220104.jar</ResourceURL>
 </JavaCallout>
 ```
 
@@ -161,8 +161,8 @@ Any property name that begins with `xmlns:` is treated as an xml prefix and name
     <Property name='xpath'>/soap:Envelope/soap:Body/act:test/abc/act:demo/text()</Property>
     <Property name='action'>replace</Property>
   </Properties>
-  <ClassName>com.google.apigee.edgecallouts.EditXmlNode</ClassName>
-  <ResourceURL>java://apigee-custom-edit-xml-node-20210210.jar</ResourceURL>
+  <ClassName>com.google.apigee.callouts.EditXmlNode</ClassName>
+  <ResourceURL>java://apigee-custom-edit-xml-node-20220104.jar</ResourceURL>
 </JavaCallout>
 ```
 
@@ -213,8 +213,8 @@ namespace declarations into the toplevel element.  For example, this is ok:
     <Property name='xpath'>{request.queryparam.xpath}</Property>
     <Property name='action'>append</Property>
   </Properties>
-  <ClassName>com.google.apigee.edgecallouts.EditXmlNode</ClassName>
-  <ResourceURL>java://apigee-custom-edit-xml-node-20210210.jar</ResourceURL>
+  <ClassName>com.google.apigee.callouts.EditXmlNode</ClassName>
+  <ResourceURL>java://apigee-custom-edit-xml-node-20220104.jar</ResourceURL>
 </JavaCallout>
 ```
 
@@ -231,8 +231,8 @@ Using the "remove" action, you can also remove a node (which may have children) 
     <Property name='xpath'>/soap:Envelope/soap:Header</Property>
     <Property name='action'>remove</Property>
   </Properties>
-  <ClassName>com.google.apigee.edgecallouts.EditXmlNode</ClassName>
-  <ResourceURL>java://apigee-custom-edit-xml-node-20210210.jar</ResourceURL>
+  <ClassName>com.google.apigee.callouts.EditXmlNode</ClassName>
+  <ResourceURL>java://apigee-custom-edit-xml-node-20220104.jar</ResourceURL>
 </JavaCallout>
 ```
 
@@ -296,8 +296,8 @@ Using the "insert-before" action, you can insert a soap security header into a S
     ]]>
     </Property>
   </Properties>
-  <ClassName>com.google.apigee.edgecallouts.EditXmlNode</ClassName>
-  <ResourceURL>java://apigee-custom-edit-xml-node-20210210.jar</ResourceURL>
+  <ClassName>com.google.apigee.callouts.EditXmlNode</ClassName>
+  <ResourceURL>java://apigee-custom-edit-xml-node-20220104.jar</ResourceURL>
 </JavaCallout>
 ```
 
@@ -344,8 +344,8 @@ Here's another example using the "remove" action. This one uses an XPath that se
     <Property name='xpath'>/b:Response/b:document/b:documentProperties[b:name/text()='Property2']</Property>
     <Property name='action'>remove</Property>
   </Properties>
-  <ClassName>com.google.apigee.edgecallouts.EditXmlNode</ClassName>
-  <ResourceURL>java://apigee-custom-edit-xml-node-20210210.jar</ResourceURL>
+  <ClassName>com.google.apigee.callouts.EditXmlNode</ClassName>
+  <ResourceURL>java://apigee-custom-edit-xml-node-20220104.jar</ResourceURL>
 </JavaCallout>
 ```
 

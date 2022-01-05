@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.google.apigee.callout</groupId>
   <artifactId>apigee-custom-edit-xml-node</artifactId>
-  <version>20210210</version>
+  <version>20220104</version>
   <name>ApigeeCustomEditXmlNode</name>
   <url>http://maven.apache.org</url>
   <packaging>jar</packaging>
@@ -15,7 +15,7 @@
     <java.version>1.8</java.version>
     <testng.version>6.8.7</testng.version> <!-- current: 6.9.4 -->
     <jmockit.version>1.7</jmockit.version>
-    <jackson.version>2.11.1</jackson.version>
+    <jackson.version>[2.11.1,)</jackson.version>
     <apiproxy.java.rsrc.dir>../bundle/apiproxy/resources/java</apiproxy.java.rsrc.dir>
   </properties>
 

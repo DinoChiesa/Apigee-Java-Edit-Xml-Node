@@ -6,6 +6,6 @@
     <Property name='xpath'>/soap:Envelope/soap:Header</Property>
     <Property name='action'>remove</Property>
   </Properties>
-  <ClassName>com.google.apigee.edgecallouts.EditXmlNode</ClassName>
-  <ResourceURL>java://apigee-custom-edit-xml-node-20210210.jar</ResourceURL>
+  <ClassName>com.google.apigee.callouts.EditXmlNode</ClassName>
+  <ResourceURL>java://apigee-custom-edit-xml-node-20220104.jar</ResourceURL>
 </JavaCallout>
