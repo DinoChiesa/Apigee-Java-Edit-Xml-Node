@@ -424,13 +424,15 @@ Jars.
 
 ## Support
 
-This callout is open-source software, and is not a supported part of Apigee.  If you need assistance, you can try inquiring on [The Apigee Community
-Site](https://community.apigee.com).  There is no service-level guarantee for
+This callout is open-source software, and is not a supported part of Apigee.
+If you need assistance, you can try inquiring on [Google Cloud Community
+forum dedicated to Apigee](https://www.googlecloudcommunity.com/gc/Apigee/bd-p/cloud-apigee).
+There is no service-level guarantee for
 responses to inquiries regarding this callout.
 
 ## License
 
-This material is copyright 2015,2016 Apigee Corporation, 2017-2021 Google LLC.
+This material is [Copyright 2015, 2016 Apigee Corporation, 2017-2021 Google LLC](./NOTICE).
 and is licensed under the [Apache 2.0 License](LICENSE). This includes the Java
 code as well as the API Proxy configuration.
 
