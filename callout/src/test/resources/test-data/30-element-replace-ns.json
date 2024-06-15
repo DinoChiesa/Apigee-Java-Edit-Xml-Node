@@ -1,15 +1,15 @@
 {
   "input" : {
     "debug" : "true",
-    "xmlns:ns1" : "urn:796DFC84-130F",
-    "new-node-text" : "<newelement>seven</newelement>",
+    "xmlns:ns1" : "urn:123",
+    "new-node-text" : "<tc30>seven</tc30>",
     "new-node-type" : "element",
     "xpath" : "/ns1:root/ns1:A",
     "action" : "replace",
-    "message-content" : "<root xmlns='urn:796DFC84-130F'><A attr1='fred'>text1</A></root>"
+    "message-content" : "<root xmlns='urn:123'><A attr1='fred'>text1</A></root>"
   },
   "expected" : {
     "success" : "true",
-    "message-content" : "<root xmlns='urn:796DFC84-130F'><newelement xmlns:ns1='urn:796DFC84-130F' xmlns=''>seven</newelement></root>"
+    "message-content" : "<root xmlns='urn:123'><tc30 xmlns='' xmlns:ns1='urn:123'>seven</tc30></root>"
   }
 }

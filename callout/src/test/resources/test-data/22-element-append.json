@@ -1,7 +1,7 @@
 {
   "input" : {
     "debug" : "true",
-    "new-node-text" : "<newelement>seven</newelement>",
+    "new-node-text" : "<tc22>seven</tc22>",
     "new-node-type" : "element",
     "xpath" : "/root/A",
     "action" : "append",
@@ -9,6 +9,6 @@
   },
   "expected" : {
     "success" : "true",
-    "message-content" : "<root><A attr1='fred'>text1<newelement>seven</newelement></A></root>"
+    "message-content" : "<root><A attr1='fred'>text1<tc22>seven</tc22></A></root>"
   }
 }

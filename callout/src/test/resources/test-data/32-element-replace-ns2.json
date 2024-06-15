@@ -1,0 +1,15 @@
+{
+  "input" : {
+    "debug" : "true",
+    "xmlns:ns1" : "urn:tc32",
+    "new-node-text" : "<newelt xmlns='foo'>seven</newelt>",
+    "new-node-type" : "element",
+    "xpath" : "/ns1:root/ns1:A",
+    "action" : "replace",
+    "message-content" : "<root xmlns='urn:tc32'><A attr1='fred'>text1</A></root>"
+  },
+  "expected" : {
+    "success" : "true",
+    "message-content" : "<root xmlns='urn:tc32'><newelt xmlns='foo' xmlns:ns1='urn:tc32'>seven</newelt></root>"
+  }
+}

@@ -1,4 +1,4 @@
-// Copyright 2017-2021 Google LLC.
+// Copyright © 2017-2021 Google LLC.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -32,6 +32,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -100,6 +101,14 @@ public class XmlUtils {
     }
     is.setCharacterStream(new StringReader(fragment));
     Document ret = builder.parse(is);
+    if (!namespaces.isEmpty()) {
+      // If there are namespaces in the destination, check default ns and
+      // explicitly add one if not present.
+      Element docElt = ret.getDocumentElement();
+      if (!docElt.hasAttribute("xmlns")) {
+        docElt.setAttribute("xmlns", "");
+      }
+    }
     return ret;
   }
 

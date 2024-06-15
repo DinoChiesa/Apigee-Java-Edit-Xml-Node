@@ -1,10 +1,4 @@
-// EditXmlNode.java
-//
-// This is the source code for a Java callout for Apigee.
-// This callout adds a node into a XML document, or edits a node that is
-// already in a document.
-//
-// Copyright 2017-2021 Google LLC.
+// Copyright © 2017-2024 Google LLC.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +13,12 @@
 // limitations under the License.
 //
 // ------------------------------------------------------------------
+// EditXmlNode.java
+//
+// This is the source code for a Java callout for Apigee.
+// This callout adds a node into a XML document, or edits a node that is
+// already in a document.
+//
 
 package com.google.apigee.callouts;
 
@@ -269,8 +269,6 @@ public class EditXmlNode implements Execution {
     Node newNode = null;
     switch (newNodeType) {
       case Node.ELEMENT_NODE:
-        // Create a duplicate node and transfer ownership of the
-        // new node into the destination document.
         Document temp = XmlUtils.parseXml(text, namespaces);
         newNode = document.importNode(temp.getDocumentElement(), true);
         break;

@@ -38,7 +38,7 @@ above into this:
 
 Today, in Apigee, you could do this with an XSLT policy and an XSLT module.
 But many people don't want to write or maintain XSLT.  This policy allows you to
-accomplish the task with No coding required!
+accomplish the task with No coding required!  [This policy does not perform decryption, just XML surgery.]
 
 In addition to allowing you to replace a node in a document, this policy also
 allows you to remove a single node (an attribute or element) from an XML document, or to insert a single
@@ -60,7 +60,7 @@ configuration for the policy.  If you want to build it, feel free.
 The instructions are at the bottom of this readme.
 
 
-1. copy the jar file, available in  target/apigee-custom-edit-xml-node-20220104.jar , if you have built the jar, or in [the repo](bundle/apiproxy/resources/java/apigee-custom-edit-xml-node-20220104.jar) if you have not, to your apiproxy/resources/java directory. You can do this offline, or using the graphical Proxy Editor in the Apigee Admin Portal.
+1. copy the jar file, available in  target/apigee-custom-edit-xml-node-20240614.jar , if you have built the jar, or in [the repo](bundle/apiproxy/resources/java/apigee-custom-edit-xml-node-20240614.jar) if you have not, to your apiproxy/resources/java directory. You can do this offline, or using the graphical Proxy Editor in the Apigee Admin Portal.
 
 2. include an XML file for the Java callout policy in your
    apiproxy/resources/policies directory. It should look
@@ -69,7 +69,7 @@ The instructions are at the bottom of this readme.
     <JavaCallout name='Java-EditXmlNode-1'>
         ...
       <ClassName>com.google.apigee.callouts.EditXmlNode</ClassName>
-      <ResourceURL>java://apigee-custom-edit-xml-node-20220104.jar</ResourceURL>
+      <ResourceURL>java://apigee-custom-edit-xml-node-20240614.jar</ResourceURL>
     </JavaCallout>
    ```
 
@@ -124,7 +124,7 @@ NB: There is no support for namespace-qualified attributes.
     <Property name='action'>append</Property>
   </Properties>
   <ClassName>com.google.apigee.callouts.EditXmlNode</ClassName>
-  <ResourceURL>java://apigee-custom-edit-xml-node-20220104.jar</ResourceURL>
+  <ResourceURL>java://apigee-custom-edit-xml-node-20240614.jar</ResourceURL>
 </JavaCallout>
 ```
 
@@ -142,7 +142,7 @@ NB: There is no support for namespace-qualified attributes.
     <Property name='output-variable'>my_variable</Property>
   </Properties>
   <ClassName>com.google.apigee.callouts.EditXmlNode</ClassName>
-  <ResourceURL>java://apigee-custom-edit-xml-node-20220104.jar</ResourceURL>
+  <ResourceURL>java://apigee-custom-edit-xml-node-20240614.jar</ResourceURL>
 </JavaCallout>
 ```
 
@@ -162,7 +162,7 @@ Any property name that begins with `xmlns:` is treated as an xml prefix and name
     <Property name='action'>replace</Property>
   </Properties>
   <ClassName>com.google.apigee.callouts.EditXmlNode</ClassName>
-  <ResourceURL>java://apigee-custom-edit-xml-node-20220104.jar</ResourceURL>
+  <ResourceURL>java://apigee-custom-edit-xml-node-20240614.jar</ResourceURL>
 </JavaCallout>
 ```
 
@@ -214,7 +214,7 @@ namespace declarations into the toplevel element.  For example, this is ok:
     <Property name='action'>append</Property>
   </Properties>
   <ClassName>com.google.apigee.callouts.EditXmlNode</ClassName>
-  <ResourceURL>java://apigee-custom-edit-xml-node-20220104.jar</ResourceURL>
+  <ResourceURL>java://apigee-custom-edit-xml-node-20240614.jar</ResourceURL>
 </JavaCallout>
 ```
 
@@ -232,7 +232,7 @@ Using the "remove" action, you can also remove a node (which may have children) 
     <Property name='action'>remove</Property>
   </Properties>
   <ClassName>com.google.apigee.callouts.EditXmlNode</ClassName>
-  <ResourceURL>java://apigee-custom-edit-xml-node-20220104.jar</ResourceURL>
+  <ResourceURL>java://apigee-custom-edit-xml-node-20240614.jar</ResourceURL>
 </JavaCallout>
 ```
 
@@ -297,7 +297,7 @@ Using the "insert-before" action, you can insert a soap security header into a S
     </Property>
   </Properties>
   <ClassName>com.google.apigee.callouts.EditXmlNode</ClassName>
-  <ResourceURL>java://apigee-custom-edit-xml-node-20220104.jar</ResourceURL>
+  <ResourceURL>java://apigee-custom-edit-xml-node-20240614.jar</ResourceURL>
 </JavaCallout>
 ```
 
@@ -345,7 +345,7 @@ Here's another example using the "remove" action. This one uses an XPath that se
     <Property name='action'>remove</Property>
   </Properties>
   <ClassName>com.google.apigee.callouts.EditXmlNode</ClassName>
-  <ResourceURL>java://apigee-custom-edit-xml-node-20220104.jar</ResourceURL>
+  <ResourceURL>java://apigee-custom-edit-xml-node-20240614.jar</ResourceURL>
 </JavaCallout>
 ```
 
@@ -389,16 +389,14 @@ this repo](bundle/apiproxy).
 
 ## Building
 
-Building from source requires Java 1.8, and Maven.
+You do not need to build this callout in order to use it.
+But you can build it if you like.
+
+Building from source requires Java 11, and Maven 3.9.x
 
 1. unpack (if you can read this, you've already done that).
 
-2. Before building _the first time_, configure the build on your machine by loading the Apigee jars into your local cache:
-  ```
-  ./buildsetup.sh
-  ```
-
-3. Build with maven.
+2. Build with maven.
   ```
   mvn clean package
   ```
@@ -412,27 +410,22 @@ Building from source requires Java 1.8, and Maven.
 - Apigee message-flow v1.0
 - fasterxml jackson (needed only for building+running tests)
 - testng v6.8.7 (needed only for building+running tests)
-- jmockit v1.7 (needed only for building+running tests)
+- jmockit v1.49 (needed only for building+running tests)
 
 
-These jars must be available on the classpath for the compile to succeed. You do
-not need to worry about these jars if you are not building from source. The
-buildsetup.sh script will download the Apigee files for you automatically, and
-will insert them into your maven cache. The pom file will take care of the other
-Jars.
+The pom file will take care of these Jars.
 
 
 ## Support
 
-This callout is open-source software, and is not a supported part of Apigee.
-If you need assistance, you can try inquiring on [Google Cloud Community
-forum dedicated to Apigee](https://www.googlecloudcommunity.com/gc/Apigee/bd-p/cloud-apigee).
-There is no service-level guarantee for
-responses to inquiries regarding this callout.
+This callout is open-source software, and is not a supported part of Apigee.  If
+you need assistance, you can try inquiring on [the Google Cloud Community forum
+dedicated to Apigee](https://goo.gle/apigee-community) There is no service-level
+guarantee for responses to inquiries posted to that site.
 
 ## License
 
-This material is [Copyright 2015, 2016 Apigee Corporation, 2017-2021 Google LLC](./NOTICE).
+This material is [Copyright 2015, 2016 Apigee Corporation, 2017-2024 Google LLC](./NOTICE).
 and is licensed under the [Apache 2.0 License](LICENSE). This includes the Java
 code as well as the API Proxy configuration.
 

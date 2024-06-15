@@ -1,4 +1,4 @@
-// Copyright 2017-2021 Google LLC.
+// Copyright © 2017-2024 Google LLC.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,23 +15,17 @@
 
 package com.google.apigee.callouts;
 
-import com.apigee.flow.execution.ExecutionContext;
 import com.apigee.flow.execution.ExecutionResult;
-import com.apigee.flow.message.Message;
-import com.apigee.flow.message.MessageContext;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.ByteArrayInputStream;
+import com.google.apigee.fakes.FakeExecutionContext;
+import com.google.apigee.fakes.FakeMessage;
+import com.google.apigee.fakes.FakeMessageContext;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import mockit.Mock;
-import mockit.MockUp;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
@@ -40,65 +34,20 @@ import org.testng.annotations.Test;
 public class TestEditXmlNodeCallout {
   private static final String testDataDir = "src/test/resources/test-data";
 
-  MessageContext msgCtxt;
-  String messageContent;
-  Message message;
-  ExecutionContext exeCtxt;
+  FakeMessage message;
+  FakeMessageContext msgCtxt;
+  FakeExecutionContext exeCtxt;
 
-  @BeforeMethod()
-  public void testSetup1() {
+  @BeforeMethod
+  public void beforeMethod(Method method) throws Exception {
+    String methodName = method.getName();
+    String className = method.getDeclaringClass().getName();
+    System.out.printf("\n\n==================================================================\n");
+    System.out.printf("TEST %s.%s()\n", className, methodName);
 
-    msgCtxt =
-        new MockUp<MessageContext>() {
-          private Map<String,Object> variables;
-
-          public void $init() {
-            variables = new HashMap<String,Object>();
-          }
-
-          @Mock()
-          public Object getVariable(final String name) {
-            if (variables == null) {
-              variables = new HashMap<String,Object>();
-            }
-            return variables.get(name);
-          }
-
-          @Mock()
-          public boolean setVariable(final String name, final Object value) {
-            if (variables == null) {
-              variables = new HashMap<String,Object>();
-            }
-            variables.put(name, value);
-            return true;
-          }
-
-          @Mock()
-          public boolean removeVariable(final String name) {
-            if (variables == null) {
-              variables = new HashMap<String,Object>();
-            }
-            if (variables.containsKey(name)) {
-              variables.remove(name);
-            }
-            return true;
-          }
-
-          @Mock()
-          public Message getMessage() {
-            return message;
-          }
-        }.getMockInstance();
-
-    exeCtxt = new MockUp<ExecutionContext>() {}.getMockInstance();
-
-    message =
-        new MockUp<Message>() {
-          @Mock()
-          public InputStream getContentAsStream() {
-            return new ByteArrayInputStream(messageContent.getBytes(StandardCharsets.UTF_8));
-          }
-        }.getMockInstance();
+    message = new FakeMessage();
+    msgCtxt = new FakeMessageContext(message);
+    exeCtxt = new FakeExecutionContext();
   }
 
   @DataProvider(name = "batch1")
@@ -151,7 +100,7 @@ public class TestEditXmlNodeCallout {
       System.out.printf("  %10s - %s\n", tc.getTestName(), tc.getDescription());
     else System.out.printf("  %10s\n", tc.getTestName());
 
-    messageContent = tc.getInput().get("message-content");
+    message.setContent(tc.getInput().get("message-content"));
 
     EditXmlNode callout = new EditXmlNode(tc.getInput()); // properties
 
@@ -169,14 +118,12 @@ public class TestEditXmlNodeCallout {
       if (expectedResult == ExecutionResult.SUCCESS) {
         String expectedContent = tc.getExpected().get("message-content");
         expectedContent = expectedContent.replace('\'', '"');
-        if (actualContent.equals(expectedContent)) {
-        } else {
+        if (!actualContent.equals(expectedContent)) {
           // System.out.printf("  FAIL - content\n");
-          System.err.printf("    got: %s\n", actualContent);
+          System.err.printf("    got     : %s\n", actualContent);
           System.err.printf("    expected: %s\n", expectedContent);
-          // the following will throw
-          Assert.assertEquals(actualContent, expectedContent, "result not as expected");
         }
+        Assert.assertEquals(actualContent, expectedContent, "result not as expected");
       } else {
         String expectedError = tc.getExpected().get("error");
         if (expectedError != null) {
